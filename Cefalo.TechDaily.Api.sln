@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.TechDaily.Api", "Cefalo.TechDaily.Api\Cefalo.TechDaily.Api.csproj", "{7C27EADD-149C-4B81-B2AF-6745F8853FD4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76B80D7A-CE41-4143-A56E-90041D326A79} = {76B80D7A-CE41-4143-A56E-90041D326A79}
+		{7D7FA180-AA42-4776-9DDF-B22AE90A40CB} = {7D7FA180-AA42-4776-9DDF-B22AE90A40CB}
+		{8DC86013-4EAD-41F9-8699-D60A416668D0} = {8DC86013-4EAD-41F9-8699-D60A416668D0}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.TechDaily.Database", "Cefalo.TechDaily.Database\Cefalo.TechDaily.Database.csproj", "{76B80D7A-CE41-4143-A56E-90041D326A79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.TechDaily.Service", "Cefalo.TechDaily.Service\Cefalo.TechDaily.Service.csproj", "{7D7FA180-AA42-4776-9DDF-B22AE90A40CB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76B80D7A-CE41-4143-A56E-90041D326A79} = {76B80D7A-CE41-4143-A56E-90041D326A79}
+		{8DC86013-4EAD-41F9-8699-D60A416668D0} = {8DC86013-4EAD-41F9-8699-D60A416668D0}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.TechDaily.Repository", "Cefalo.TechDaily.Repository\Cefalo.TechDaily.Repository.csproj", "{8DC86013-4EAD-41F9-8699-D60A416668D0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76B80D7A-CE41-4143-A56E-90041D326A79} = {76B80D7A-CE41-4143-A56E-90041D326A79}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C27EADD-149C-4B81-B2AF-6745F8853FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C27EADD-149C-4B81-B2AF-6745F8853FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C27EADD-149C-4B81-B2AF-6745F8853FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C27EADD-149C-4B81-B2AF-6745F8853FD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76B80D7A-CE41-4143-A56E-90041D326A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76B80D7A-CE41-4143-A56E-90041D326A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76B80D7A-CE41-4143-A56E-90041D326A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76B80D7A-CE41-4143-A56E-90041D326A79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D7FA180-AA42-4776-9DDF-B22AE90A40CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D7FA180-AA42-4776-9DDF-B22AE90A40CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D7FA180-AA42-4776-9DDF-B22AE90A40CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D7FA180-AA42-4776-9DDF-B22AE90A40CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {46DEAACA-2C2A-483D-A9EC-DD7FF7EA53FC}
+	EndGlobalSection
+EndGlobal
