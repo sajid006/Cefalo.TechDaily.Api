@@ -21,7 +21,7 @@ namespace Cefalo.TechDaily.Repository.Repositories
         {
             return await _context.Users.ToListAsync();
         }
-        public async Task<User> GetUserByIdAsync(int Id)
+        public async Task<User?> GetUserByIdAsync(int Id)
         {
             var user = await _context.Users.FindAsync(Id);
             return user;
@@ -34,7 +34,6 @@ namespace Cefalo.TechDaily.Repository.Repositories
         }
         public async Task<User?> UpdateUser(int Id, User user)
         {
-            if (Id != user.Id) return null;
             var myUser = await _context.Users.FindAsync(Id);
             if (myUser == null) return null;
             myUser.Name = user.Name;

@@ -13,7 +13,7 @@ namespace Cefalo.TechDaily.Database.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string CreatedAt { get; set; }
-        public string UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

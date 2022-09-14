@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cefalo.TechDaily.Database\Cefalo.TechDaily.Database.csproj" />
+    <ProjectReference Include="..\Cefalo.TechDaily.Repository\Cefalo.TechDaily.Repository.csproj" />
   </ItemGroup>
 
 </Project>
