@@ -4,6 +4,7 @@ using Cefalo.TechDaily.Repository.Repositories;
 using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Dto;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations.Model;
@@ -17,17 +18,21 @@ namespace Cefalo.TechDaily.Service.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IMapper _mapper;
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<List<UserDto>> GetUsersAsync()
         {
-            return await _userRepository.GetUsersAsync();
+            var users = await _userRepository.GetUsersAsync();
+            return users.Select(user => _mapper.Map<UserDto>(user)).ToList(); 
         }
-        public async Task<User?> GetUserByIdAsync(int Id)
+        public async Task<UserDto?> GetUserByIdAsync(int Id)
         {
-            return await _userRepository.GetUserByIdAsync(Id);
+            var user =  await _userRepository.GetUserByIdAsync(Id);
+            return _mapper.Map<UserDto>(user);
         }
         public async Task<UserDto> PostUser(User user)
         {

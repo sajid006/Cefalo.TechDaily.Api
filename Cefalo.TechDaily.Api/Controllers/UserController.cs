@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using Cefalo.TechDaily.Service.Dto;
+using AutoMapper;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
@@ -19,7 +20,7 @@ namespace Cefalo.TechDaily.Api.Controllers
             _userService = userService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User?>>> Getusers()
+        public async Task<ActionResult<IEnumerable<UserDto?>>> Getusers()
         {
             return Ok(await _userService.GetUsersAsync());
         }
