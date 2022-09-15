@@ -34,18 +34,15 @@ namespace Cefalo.TechDaily.Service.Services
             var user =  await _userRepository.GetUserByIdAsync(Id);
             return _mapper.Map<UserDto>(user);
         }
+        public async Task<UserDto?> GetUserByUsernameAsync(string Username)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(Username);
+            return _mapper.Map<UserDto>(user);
+        }
         public async Task<UserDto> PostUser(User user)
         {
             User newUser = await _userRepository.PostUser(user);
-            var userDto = new UserDto
-            {
-                Id = newUser.Id,
-                Username = newUser.Username,
-                Email = newUser.Email,
-                Name = newUser.Name,
-                CreatedAt = newUser.CreatedAt,
-                UpdatedAt = newUser.UpdatedAt
-            };
+            var userDto = _mapper.Map<UserDto>(newUser);
             return userDto;
         }
 
@@ -54,15 +51,7 @@ namespace Cefalo.TechDaily.Service.Services
             if (Id != user.Id) return null;
             var newUser = await _userRepository.UpdateUser(Id, user);
             if (newUser == null) return null;
-            var userDto = new UserDto
-            {
-                Id = newUser.Id,
-                Username = newUser.Username,
-                Email = newUser.Email,
-                Name = newUser.Name,
-                CreatedAt = newUser.CreatedAt,
-                UpdatedAt = newUser.UpdatedAt
-            };
+            var userDto = _mapper.Map<UserDto>(newUser);
             return userDto;
         }
         public Task<Boolean> DeleteUser(int Id)

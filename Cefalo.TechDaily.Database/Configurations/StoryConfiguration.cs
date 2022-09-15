@@ -21,9 +21,9 @@ namespace Cefalo.TechDaily.Database.Configurations
 
             builder.Property(story => story.AuthorName).IsRequired();
 
-            builder.Property(story => story.CreatedAt).IsRequired().ValueGeneratedOnAdd();
+            builder.Property(story => story.CreatedAt).IsRequired();
 
-            builder.Property(story => story.UpdatedAt).IsRequired().ValueGeneratedOnAddOrUpdate();
+            builder.Property(story => story.UpdatedAt).IsRequired();
 
             builder.HasOne<User>(story => story.User).WithMany(user => user.Stories).HasForeignKey(user => user.Id);
         }

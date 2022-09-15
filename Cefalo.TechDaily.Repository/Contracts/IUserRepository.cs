@@ -11,6 +11,7 @@ namespace Cefalo.TechDaily.Repository.Contracts
     {
         Task<List<User>> GetUsersAsync();
         Task<User?> GetUserByIdAsync(int Id);
+        Task<User?> GetUserByUsernameAsync(string Username);
         Task<User> PostUser(User user);
         Task<User?> UpdateUser(int Id, User user);
         Task<Boolean> DeleteUser(int Id);

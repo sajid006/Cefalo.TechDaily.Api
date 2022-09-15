@@ -28,9 +28,9 @@ namespace Cefalo.TechDaily.Database.Configurations
 
             builder.Property(user => user.PasswordSalt).IsRequired();
 
-            builder.Property(user => user.CreatedAt).IsRequired().ValueGeneratedOnAdd();
+            builder.Property(user => user.CreatedAt).IsRequired();
 
-            builder.Property(user => user.UpdatedAt).IsRequired().ValueGeneratedOnAddOrUpdate();
+            builder.Property(user => user.UpdatedAt).IsRequired();
 
         }
     }

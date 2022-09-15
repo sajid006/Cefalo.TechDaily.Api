@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cefalo.TechDaily.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220914092858_createInitial")]
-    partial class createInitial
+    [Migration("20220915071012_CreateInitial")]
+    partial class CreateInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,6 @@ namespace Cefalo.TechDaily.Database.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -47,7 +46,6 @@ namespace Cefalo.TechDaily.Database.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -64,7 +62,6 @@ namespace Cefalo.TechDaily.Database.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -85,7 +82,6 @@ namespace Cefalo.TechDaily.Database.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")

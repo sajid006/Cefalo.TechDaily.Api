@@ -16,6 +16,6 @@ namespace Cefalo.TechDaily.Database.Models
         public byte[] PasswordSalt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public virtual ICollection<Story> Stories { get; set; }
+        public virtual ICollection<Story?> Stories { get; set; }
     }
 }

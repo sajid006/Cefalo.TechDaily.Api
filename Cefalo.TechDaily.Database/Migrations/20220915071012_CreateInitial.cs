@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Cefalo.TechDaily.Database.Migrations
 {
-    public partial class createInitial : Migration
+    public partial class CreateInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

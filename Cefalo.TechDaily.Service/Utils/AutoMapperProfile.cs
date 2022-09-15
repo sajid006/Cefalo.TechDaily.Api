@@ -14,6 +14,8 @@ namespace Cefalo.TechDaily.Service.Utils
         public AutoMapperProfile()
         {
             CreateMap<User, UserDto>();
+            CreateMap<SignupDto, User>();
+            CreateMap<LoginDto, User>();
         }
     }
 }

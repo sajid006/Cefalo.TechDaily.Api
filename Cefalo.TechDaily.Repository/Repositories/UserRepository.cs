@@ -26,6 +26,11 @@ namespace Cefalo.TechDaily.Repository.Repositories
             var user = await _context.Users.FindAsync(Id);
             return user;
         }
+        public async Task<User?> GetUserByUsernameAsync(string Username)
+        {
+            var userByName =  await _context.Users.Where(u => u.Username == Username).FirstOrDefaultAsync<User>();
+            return userByName;
+        }
         public async Task<User> PostUser(User user)
         {
             _context.Users.Add(user);
