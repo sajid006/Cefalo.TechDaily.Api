@@ -13,7 +13,7 @@ namespace Cefalo.TechDaily.Service.Contracts
         Task<UserDto?> GetUserByIdAsync(int Id);
         Task<UserDto?> GetUserByUsernameAsync(string Username);
         Task<UserDto> PostUser(User user);
-        Task<UserDto?> UpdateUser(int Id, User user);
+        Task<UserDto?> UpdateUser(int Id, UpdateDto updateDto);
         Task<Boolean> DeleteUser(int Id);
     }
 }

@@ -10,7 +10,7 @@ using AutoMapper;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -37,11 +37,13 @@ namespace Cefalo.TechDaily.Api.Controllers
             var newUserDto = await _userService.PostUser(user);
             return Created("",newUserDto);
         }
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> UpdateUser(int Id, User request)
+        [HttpPatch("{Id}")]
+        public async Task<IActionResult> UpdateUser(int Id, UpdateDto updateDto)
         {
-            if (Id != request.Id) return BadRequest("Id does not match");
-            var userDto = await _userService.UpdateUser(Id,request);
+            System.Diagnostics.Debug.WriteLine("hello");
+            if (Id != updateDto.Id) return BadRequest("Id does not match");
+            
+            var userDto = await _userService.UpdateUser(Id,updateDto);
             if (userDto == null) return BadRequest("User not found");
             return Ok(userDto);
         }

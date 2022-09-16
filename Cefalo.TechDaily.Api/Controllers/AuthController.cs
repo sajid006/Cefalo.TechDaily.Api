@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -25,41 +25,18 @@ namespace Cefalo.TechDaily.Api.Controllers
         public async Task<ActionResult<UserDto>> Signup(SignupDto request)
         {
 
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            var user = _mapper.Map<User>(request);
-            user.UpdatedAt = DateTime.Now;
-            user.CreatedAt = DateTime.Now;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            var userDto = await _userService.PostUser(user);
+            var userDto = await _authService.Signup(request);
+            if (userDto == null) return BadRequest("Cant create user");
             return CreatedAtAction(nameof(Signup), userDto.Id, userDto);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(LoginDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            var user = _mapper.Map<User>(request);
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            var userDto = await _authService.Login(user);
-            return "Hello " + user.Username;
+            var token = await _authService.Login(request);
+            if (token == null) return BadRequest("Invalid Username or Password");
+            return token;
         }
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(User.PasswordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
+        
     }
 }

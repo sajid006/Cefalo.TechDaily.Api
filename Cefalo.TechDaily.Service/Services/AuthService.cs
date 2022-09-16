@@ -3,9 +3,14 @@ using Cefalo.TechDaily.Database.Models;
 using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Dto;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,25 +20,72 @@ namespace Cefalo.TechDaily.Service.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public AuthService(IUserRepository userRepository, IMapper mapper)
+        private readonly IConfiguration _configuration;
+        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _configuration = configuration;
         }
-
-        public Task<UserDto?> Login(User user)
+        public async Task<UserDto?> Signup(SignupDto request)
         {
-            
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            var user = _mapper.Map<User>(request);
+            user.UpdatedAt = DateTime.Now;
+            user.CreatedAt = DateTime.Now;
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            var newUser = await _userRepository.PostUser(user);
+            var userDto = _mapper.Map<UserDto>(newUser);
+            return userDto;
+        }
+        public async Task<string? > Login(LoginDto request)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(request.Username);
+            if (user == null) return null;
+            bool isPasswordCorrect = VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt);
+            if (!isPasswordCorrect) return null;
+            string token = CreateToken(user);
+            return token;
         }
 
         public Task<UserDto?> Logout()
         {
             throw new NotImplementedException();
         }
-
-        public Task<UserDto?> Signup(User user)
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            throw new NotImplementedException();
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
         }
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
+            }
+        }
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Username)
+            };
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires:DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+
+        }
+
     }
 }

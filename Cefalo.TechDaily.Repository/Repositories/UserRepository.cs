@@ -43,8 +43,8 @@ namespace Cefalo.TechDaily.Repository.Repositories
             if (myUser == null) return null;
             myUser.Name = user.Name;
             myUser.Email = user.Email;
-            myUser.CreatedAt = user.CreatedAt;
-            myUser.UpdatedAt = user.UpdatedAt;
+            myUser.Username = user.Username;
+            myUser.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return user;
         }
