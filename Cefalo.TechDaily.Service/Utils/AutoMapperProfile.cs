@@ -16,7 +16,10 @@ namespace Cefalo.TechDaily.Service.Utils
             CreateMap<User, UserDto>();
             CreateMap<SignupDto, User>();
             CreateMap<LoginDto, User>();
-            CreateMap<UpdateDto, User>();
+            CreateMap<UpdateUserDto, User>();
+
+            CreateMap<UpdateStoryDto, User>();
+            CreateMap<PostStoryDto, User>().ReverseMap();
         }
     }
 }

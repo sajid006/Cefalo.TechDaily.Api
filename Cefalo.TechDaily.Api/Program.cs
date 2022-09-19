@@ -4,6 +4,8 @@ using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Services;
 using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Repository.Repositories;
+using Cefalo.TechDaily.Service.Utils.Contract;
+using Cefalo.TechDaily.Service.Utils.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +22,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IStoryRepository, StoryRepository>();
+builder.Services.AddScoped<IStoryService, StoryService>();
+
+builder.Services.AddScoped<IPasswordHandler, PasswordHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

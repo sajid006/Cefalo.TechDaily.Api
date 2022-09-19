@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cefalo.TechDaily.Service.Dto
 {
-    public class UpdateDto
+    public class UpdateUserDto
     {
         public int Id { get; set; }
         public string Username { get; set; }

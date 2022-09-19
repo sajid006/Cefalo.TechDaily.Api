@@ -22,28 +22,29 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto?>>> Getusers()
         {
-            return Ok(await _userService.GetUsersAsync());
+            return Ok(await _userService.GetUsers());
         }
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetUser(int Id)
         {
-            var user = await _userService.GetUserByIdAsync(Id);
+            var user = await _userService.GetUserById(Id);
             if (user == null) return BadRequest("User not found");
             return Ok(user);
         }
         [HttpPost]
-        public async Task<IActionResult> PostUser(User user)
+        public async Task<IActionResult> PostUser(SignupDto request)
         {
-            var newUserDto = await _userService.PostUser(user);
-            return Created("",newUserDto);
+            var userDto = await _userService.PostUser(request);
+            if (userDto == null) return BadRequest("Cant create user");
+            return CreatedAtAction(nameof(PostUser), userDto.Id, userDto);
         }
         [HttpPatch("{Id}")]
-        public async Task<IActionResult> UpdateUser(int Id, UpdateDto updateDto)
+        public async Task<IActionResult> UpdateUser(int Id, UpdateUserDto updateUserDto)
         {
-            System.Diagnostics.Debug.WriteLine("hello");
-            if (Id != updateDto.Id) return BadRequest("Id does not match");
+            //System.Diagnostics.Debug.WriteLine("hello");
+            if (Id != updateUserDto.Id) return BadRequest("Id does not match");
             
-            var userDto = await _userService.UpdateUser(Id,updateDto);
+            var userDto = await _userService.UpdateUser(Id,updateUserDto);
             if (userDto == null) return BadRequest("User not found");
             return Ok(userDto);
         }

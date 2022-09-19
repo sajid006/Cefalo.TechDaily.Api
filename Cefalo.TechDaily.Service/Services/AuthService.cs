@@ -3,6 +3,7 @@ using Cefalo.TechDaily.Database.Models;
 using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Dto;
+using Cefalo.TechDaily.Service.Utils.Contract;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -21,18 +22,20 @@ namespace Cefalo.TechDaily.Service.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        private readonly IPasswordHandler _passwordHandler;
+        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IPasswordHandler passwordHandler)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _passwordHandler = passwordHandler;
         }
         public async Task<UserDto?> Signup(SignupDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            _passwordHandler.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var user = _mapper.Map<User>(request);
-            user.UpdatedAt = DateTime.Now;
-            user.CreatedAt = DateTime.Now;
+            user.UpdatedAt = DateTime.UtcNow;
+            user.CreatedAt = DateTime.UtcNow;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             var newUser = await _userRepository.PostUser(user);
@@ -41,9 +44,9 @@ namespace Cefalo.TechDaily.Service.Services
         }
         public async Task<string? > Login(LoginDto request)
         {
-            var user = await _userRepository.GetUserByUsernameAsync(request.Username);
+            var user = await _userRepository.GetUserByUsername(request.Username);
             if (user == null) return null;
-            bool isPasswordCorrect = VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt);
+            bool isPasswordCorrect = _passwordHandler.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt);
             if (!isPasswordCorrect) return null;
             string token = CreateToken(user);
             return token;
@@ -52,22 +55,6 @@ namespace Cefalo.TechDaily.Service.Services
         public Task<UserDto?> Logout()
         {
             throw new NotImplementedException();
-        }
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
         }
         private string CreateToken(User user)
         {
