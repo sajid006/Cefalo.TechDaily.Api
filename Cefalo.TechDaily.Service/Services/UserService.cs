@@ -51,8 +51,10 @@ namespace Cefalo.TechDaily.Service.Services
 
         public async Task<UserDto?> UpdateUser(string Username, UpdateUserDto updateUserDto)
         {
-            if (Username != updateUserDto.Username) return null;
+            _passwordHandler.CreatePasswordHash(updateUserDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
             User user = _mapper.Map<User>(updateUserDto);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
             var newUser = await _userRepository.UpdateUser(Username, user);
             if (newUser == null) return null;
             var userDto = _mapper.Map<UserDto>(newUser);
