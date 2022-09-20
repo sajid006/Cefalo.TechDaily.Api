@@ -4,6 +4,7 @@ using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Dto;
 using Cefalo.TechDaily.Service.Utils.Contract;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -23,12 +24,14 @@ namespace Cefalo.TechDaily.Service.Services
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IPasswordHandler _passwordHandler;
-        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IPasswordHandler passwordHandler)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IPasswordHandler passwordHandler, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
             _passwordHandler = passwordHandler;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<UserDto?> Signup(SignupDto request)
         {
@@ -56,7 +59,7 @@ namespace Cefalo.TechDaily.Service.Services
         {
             throw new NotImplementedException();
         }
-        private string CreateToken(User user)
+        public string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -72,6 +75,15 @@ namespace Cefalo.TechDaily.Service.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
 
+        }
+        public string GetMyName()
+        {
+            var result = string.Empty;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            }
+            return result;
         }
 
     }

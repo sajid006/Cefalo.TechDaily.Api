@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StoryController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace Cefalo.TechDaily.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostStoryDto>>> GetStories()
+        public async Task<ActionResult<IEnumerable<Story>>> GetStories()
         {
             return Ok(await _storyService.GetStories());
         }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cefalo.TechDaily.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220915071012_CreateInitial")]
-    partial class CreateInitial
+    [Migration("20220920041137_createInitial")]
+    partial class createInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,11 +27,14 @@ namespace Cefalo.TechDaily.Database.Migrations
             modelBuilder.Entity("Cefalo.TechDaily.Database.Models.Story", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -50,16 +53,16 @@ namespace Cefalo.TechDaily.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorName");
+
                     b.ToTable("Stories");
                 });
 
             modelBuilder.Entity("Cefalo.TechDaily.Database.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Username")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -84,17 +87,9 @@ namespace Cefalo.TechDaily.Database.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
+                    b.HasKey("Username");
 
                     b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Id")
                         .IsUnique();
 
                     b.HasIndex("Username")
@@ -107,7 +102,7 @@ namespace Cefalo.TechDaily.Database.Migrations
                 {
                     b.HasOne("Cefalo.TechDaily.Database.Models.User", "User")
                         .WithMany("Stories")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("AuthorName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

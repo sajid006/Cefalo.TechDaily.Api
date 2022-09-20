@@ -22,10 +22,10 @@ namespace Cefalo.TechDaily.Service.Services
             _mapper = mapper;
         }   
 
-        public async Task<List<PostStoryDto>> GetStories()
+        public async Task<List<Story>> GetStories()
         {
             var stories = await _storyRepository.GetStories();
-            return stories.Select(story => _mapper.Map<PostStoryDto>(story)).ToList();
+            return stories.ToList();
         }
 
         public async Task<Story> GetStoryById(int Id)

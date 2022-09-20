@@ -10,7 +10,7 @@ using AutoMapper;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -24,10 +24,10 @@ namespace Cefalo.TechDaily.Api.Controllers
         {
             return Ok(await _userService.GetUsers());
         }
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> GetUser(int Id)
+        [HttpGet("{Username}")]
+        public async Task<IActionResult> GetUserByUsername(string Username)
         {
-            var user = await _userService.GetUserById(Id);
+            var user = await _userService.GetUserByUsername(Username);
             if (user == null) return BadRequest("User not found");
             return Ok(user);
         }
@@ -36,22 +36,21 @@ namespace Cefalo.TechDaily.Api.Controllers
         {
             var userDto = await _userService.PostUser(request);
             if (userDto == null) return BadRequest("Cant create user");
-            return CreatedAtAction(nameof(PostUser), userDto.Id, userDto);
+            return CreatedAtAction(nameof(PostUser),userDto);
         }
-        [HttpPatch("{Id}")]
-        public async Task<IActionResult> UpdateUser(int Id, UpdateUserDto updateUserDto)
+        [HttpPatch("{Username}")]
+        public async Task<IActionResult> UpdateUser(string Username, UpdateUserDto updateUserDto)
         {
+            //if (Username != updateUserDto.Username) return BadRequest("Username does not match");
             //System.Diagnostics.Debug.WriteLine("hello");
-            if (Id != updateUserDto.Id) return BadRequest("Id does not match");
-            
-            var userDto = await _userService.UpdateUser(Id,updateUserDto);
+            var userDto = await _userService.UpdateUser(Username,updateUserDto);
             if (userDto == null) return BadRequest("User not found");
             return Ok(userDto);
         }
-        [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteUser(int Id)
+        [HttpDelete("{Username}")]
+        public async Task<IActionResult> DeleteUser(string Username)
         {
-            var deleted = await _userService.DeleteUser(Id);
+            var deleted = await _userService.DeleteUser(Username);
             if(!deleted) return BadRequest("User not found");
             return NoContent();
         }

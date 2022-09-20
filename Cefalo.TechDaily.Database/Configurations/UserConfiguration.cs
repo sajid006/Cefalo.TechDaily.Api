@@ -14,10 +14,8 @@ namespace Cefalo.TechDaily.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(user => user.Id);
-            builder.Property(user => user.Id).IsRequired();
-            builder.HasIndex(user => user.Id).IsUnique();
 
+            builder.HasKey(user => user.Username);
             builder.Property(user => user.Username).IsRequired().HasMaxLength(256);
             builder.HasIndex(user => user.Username).IsUnique();
 

@@ -21,26 +21,20 @@ namespace Cefalo.TechDaily.Repository.Repositories
         {
             return await _context.Users.ToListAsync();
         }
-        public async Task<User?> GetUserById(int Id)
-        {
-            var user = await _context.Users.FindAsync(Id);
-            return user;
-        }
         public async Task<User?> GetUserByUsername(string Username)
         {
-            var userByName =  await _context.Users.Where(u => u.Username == Username).FirstOrDefaultAsync<User>();
+            var userByName =  await _context.Users.FindAsync(Username);
             return userByName;
         }
         public async Task<User?> PostUser(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            //return await GetUserByUsername(user.Username);
             return user;
         }
-        public async Task<User?> UpdateUser(int Id, User user)
+        public async Task<User?> UpdateUser(string Username, User user)
         {
-            var myUser = await _context.Users.FindAsync(Id);
+            var myUser = await _context.Users.FindAsync(Username);
             if (myUser == null) return null;
             myUser.Name = user.Name;
             myUser.Email = user.Email;
@@ -49,21 +43,13 @@ namespace Cefalo.TechDaily.Repository.Repositories
             await _context.SaveChangesAsync();
             return myUser;
         }
-        public async Task<Boolean> DeleteUser(int Id)
+        public async Task<Boolean> DeleteUser(string Username)
         {
-            var user = await _context.Users.FindAsync(Id);
+            var user = await _context.Users.FindAsync(Username);
             if(user == null) return false;
             _context.Users.Remove((User)user);
             await _context.SaveChangesAsync();
             return true;
         }
-
-        
-
-        
-
-        
-
-        
     }
 }

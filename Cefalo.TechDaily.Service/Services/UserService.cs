@@ -31,11 +31,6 @@ namespace Cefalo.TechDaily.Service.Services
             var users = await _userRepository.GetUsers();
             return users.Select(user => _mapper.Map<UserDto>(user)).ToList();
         }
-        public async Task<UserDto?> GetUserById(int Id)
-        {
-            var user =  await _userRepository.GetUserById(Id);
-            return _mapper.Map<UserDto>(user);
-        }
         public async Task<UserDto?> GetUserByUsername(string Username)
         {
             var user = await _userRepository.GetUserByUsername(Username);
@@ -54,18 +49,18 @@ namespace Cefalo.TechDaily.Service.Services
             return userDto;
         }
 
-        public async Task<UserDto?> UpdateUser(int Id, UpdateUserDto updateUserDto)
+        public async Task<UserDto?> UpdateUser(string Username, UpdateUserDto updateUserDto)
         {
-            if (Id != updateUserDto.Id) return null;
+            if (Username != updateUserDto.Username) return null;
             User user = _mapper.Map<User>(updateUserDto);
-            var newUser = await _userRepository.UpdateUser(Id, user);
+            var newUser = await _userRepository.UpdateUser(Username, user);
             if (newUser == null) return null;
             var userDto = _mapper.Map<UserDto>(newUser);
             return userDto;
         }
-        public Task<Boolean> DeleteUser(int Id)
+        public Task<Boolean> DeleteUser(string Username)
         {
-            return _userRepository.DeleteUser(Id);
+            return _userRepository.DeleteUser(Username);
         }
 
         

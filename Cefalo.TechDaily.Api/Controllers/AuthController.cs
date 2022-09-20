@@ -5,10 +5,11 @@ using Cefalo.TechDaily.Service.Dto;
 using Cefalo.TechDaily.Service.Contracts;
 using AutoMapper;
 using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -27,7 +28,7 @@ namespace Cefalo.TechDaily.Api.Controllers
 
             var userDto = await _authService.Signup(request);
             if (userDto == null) return BadRequest("Cant create user");
-            return CreatedAtAction(nameof(Signup), userDto.Id, userDto);
+            return CreatedAtAction(nameof(Signup), userDto);
         }
 
         [HttpPost("login")]
@@ -37,6 +38,13 @@ namespace Cefalo.TechDaily.Api.Controllers
             if (token == null) return BadRequest("Invalid Username or Password");
             return token;
         }
-        
+
+        [HttpGet, Authorize]
+        public ActionResult<string> GetMe()
+        {
+            var username = _authService.GetMyName();
+            return Ok(username);
+        }
+
     }
 }

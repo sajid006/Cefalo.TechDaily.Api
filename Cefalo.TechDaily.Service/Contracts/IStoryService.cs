@@ -10,7 +10,7 @@ namespace Cefalo.TechDaily.Service.Contracts
 {
     public interface IStoryService
     {
-        Task<List<PostStoryDto>> GetStories();
+        Task<List<Story>> GetStories();
         Task<Story> GetStoryById(int Id);
         Task<Story> PostStory(PostStoryDto postStoryDto);
         Task<Story> UpdateStory(int Id, UpdateStoryDto updateStoryDto);
