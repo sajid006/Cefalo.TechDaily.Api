@@ -46,7 +46,7 @@ namespace Cefalo.TechDaily.Api.Controllers
         {
             //if (Username != updateUserDto.Username) return BadRequest("Username does not match");
             //System.Diagnostics.Debug.WriteLine("hello");
-            var loggedInUser = _authService.GetMyName();
+            var loggedInUser = _authService.GetLoggedinUsername();
             if (loggedInUser != Username) return BadRequest("You are not authorized to update this user");
             var userDto = await _userService.UpdateUser(Username,updateUserDto);
             if (userDto == null) return BadRequest("User not found");
@@ -55,7 +55,7 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpDelete("{Username}"), Authorize]
         public async Task<IActionResult> DeleteUser(string Username)
         {
-            var loggedInUser = _authService.GetMyName();
+            var loggedInUser = _authService.GetLoggedinUsername();
             if (loggedInUser != Username) return BadRequest("You are not authorized to delete this user");
             var deleted = await _userService.DeleteUser(Username);
             if(!deleted) return BadRequest("User not found");

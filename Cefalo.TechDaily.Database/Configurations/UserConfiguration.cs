@@ -30,6 +30,8 @@ namespace Cefalo.TechDaily.Database.Configurations
 
             builder.Property(user => user.UpdatedAt).IsRequired();
 
+            builder.Property(user => user.PasswordModifiedAt).IsRequired();
+
         }
     }
 }

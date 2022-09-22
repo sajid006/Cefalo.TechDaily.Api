@@ -39,12 +39,5 @@ namespace Cefalo.TechDaily.Api.Controllers
             return token;
         }
 
-        [HttpGet, Authorize]
-        public ActionResult<string> GetMe()
-        {
-            var username = _authService.GetMyName();
-            return Ok(username);
-        }
-
     }
 }

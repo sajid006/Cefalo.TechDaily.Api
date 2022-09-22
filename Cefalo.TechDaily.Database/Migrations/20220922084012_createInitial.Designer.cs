@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cefalo.TechDaily.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220920041137_createInitial")]
+    [Migration("20220922084012_createInitial")]
     partial class createInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,9 @@ namespace Cefalo.TechDaily.Database.Migrations
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("PasswordModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()

@@ -4,6 +4,7 @@ using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Dto;
 using Cefalo.TechDaily.Service.Utils.Contract;
+using Cefalo.TechDaily.Service.Utils.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -22,16 +23,14 @@ namespace Cefalo.TechDaily.Service.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
         private readonly IPasswordHandler _passwordHandler;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public AuthService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IPasswordHandler passwordHandler, IHttpContextAccessor httpContextAccessor)
+        private readonly IJwtTokenHandler _jwtTokenHandler;
+        public AuthService(IUserRepository userRepository, IMapper mapper, IPasswordHandler passwordHandler, IJwtTokenHandler jwtTokenHandler)
         {
             _userRepository = userRepository;
             _mapper = mapper;
-            _configuration = configuration;
             _passwordHandler = passwordHandler;
-            _httpContextAccessor = httpContextAccessor;
+            _jwtTokenHandler = jwtTokenHandler;
         }
         public async Task<UserDto?> Signup(SignupDto request)
         {
@@ -39,6 +38,7 @@ namespace Cefalo.TechDaily.Service.Services
             var user = _mapper.Map<User>(request);
             user.UpdatedAt = DateTime.UtcNow;
             user.CreatedAt = DateTime.UtcNow;
+            user.PasswordModifiedAt = DateTime.UtcNow;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             var newUser = await _userRepository.PostUser(user);
@@ -51,39 +51,13 @@ namespace Cefalo.TechDaily.Service.Services
             if (user == null) return null;
             bool isPasswordCorrect = _passwordHandler.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt);
             if (!isPasswordCorrect) return null;
-            string token = CreateToken(user);
+            string token = _jwtTokenHandler.CreateToken(user);
             return token;
         }
 
         public Task<UserDto?> Logout()
         {
             throw new NotImplementedException();
-        }
-        public string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Username)
-            };
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires:DateTime.Now.AddDays(100),
-                signingCredentials: creds);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
-
-        }
-        public string GetMyName()
-        {
-            var result = string.Empty;
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            }
-            return result;
         }
 
     }

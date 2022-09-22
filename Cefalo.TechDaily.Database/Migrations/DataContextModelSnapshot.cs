@@ -78,6 +78,9 @@ namespace Cefalo.TechDaily.Database.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<DateTime>("PasswordModifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");

@@ -36,7 +36,7 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> PostStory(PostStoryDto postStoryDto)
         {
-            var loggedInUser = _authService.GetMyName();
+            var loggedInUser = _authService.GetLoggedinUsername();
             if (loggedInUser != postStoryDto.AuthorName) return BadRequest("You are not authorized to post story");
             var newStory = await _storyService.PostStory(postStoryDto);
             if (newStory == null) return BadRequest("Cant post story");
@@ -45,7 +45,7 @@ namespace Cefalo.TechDaily.Api.Controllers
 
         [HttpPatch("{Id}"), Authorize]
         public async Task<IActionResult> UpdateStory(int Id, UpdateStoryDto updateStoryDto)
-        {   var loggedInUser = _authService.GetMyName();
+        {   var loggedInUser = _authService.GetLoggedinUsername();
             Boolean Auth = await CheckAuthor(loggedInUser, Id);
             if (!Auth)return BadRequest("You are not authorized to update story");
             var story = await _storyService.UpdateStory(Id, updateStoryDto);
@@ -55,7 +55,7 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpDelete("{Id}"), Authorize]
         public async Task<IActionResult> DeleteStory(int Id)
         {
-            var loggedInUser = _authService.GetMyName();
+            var loggedInUser = _authService.GetLoggedinUsername();
             Boolean Auth = await CheckAuthor(loggedInUser, Id);
             if(!Auth)return BadRequest("You are not authorized to delete story");
             var deleted = await _storyService.DeleteStory(Id);

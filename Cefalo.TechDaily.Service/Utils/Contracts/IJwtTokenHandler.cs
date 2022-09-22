@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cefalo.TechDaily.Database.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Cefalo.TechDaily.Service.Utils.Contracts
 {
     public interface IJwtTokenHandler
     {
+        string CreateToken(User user);
+        string GetLoggedinUsername();
     }
 }

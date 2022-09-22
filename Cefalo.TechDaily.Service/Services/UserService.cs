@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Common;
+using System.Runtime.ConstrainedExecution;
 
 
 namespace Cefalo.TechDaily.Service.Services
@@ -42,6 +43,7 @@ namespace Cefalo.TechDaily.Service.Services
             var user = _mapper.Map<User>(request);
             user.UpdatedAt = DateTime.UtcNow;
             user.CreatedAt = DateTime.UtcNow;
+            user.PasswordModifiedAt = DateTime.UtcNow;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             var newUser = await _userRepository.PostUser(user);
@@ -51,10 +53,16 @@ namespace Cefalo.TechDaily.Service.Services
 
         public async Task<UserDto?> UpdateUser(string Username, UpdateUserDto updateUserDto)
         {
-            _passwordHandler.CreatePasswordHash(updateUserDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
             User user = _mapper.Map<User>(updateUserDto);
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            if (updateUserDto.Password != null)
+            {
+                _passwordHandler.CreatePasswordHash(updateUserDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                user.PasswordModifiedAt = DateTime.UtcNow;
+            }
+            user.UpdatedAt = DateTime.UtcNow;
             var newUser = await _userRepository.UpdateUser(Username, user);
             if (newUser == null) return null;
             var userDto = _mapper.Map<UserDto>(newUser);

@@ -19,7 +19,8 @@ namespace Cefalo.TechDaily.Database.Migrations
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PasswordModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -36,11 +36,15 @@ namespace Cefalo.TechDaily.Repository.Repositories
         {
             var myUser = await _context.Users.FindAsync(Username);
             if (myUser == null) return null;
-            myUser.Name = user.Name;
             myUser.Email = user.Email;
-            myUser.PasswordHash = user.PasswordHash;
-            myUser.PasswordSalt = user.PasswordSalt;
+            myUser.Name = user.Name;
             myUser.UpdatedAt = DateTime.UtcNow;
+            if(user.PasswordHash != null)
+            {
+                myUser.PasswordHash = user.PasswordHash;
+                myUser.PasswordSalt = user.PasswordSalt;
+                myUser.PasswordModifiedAt = DateTime.UtcNow;
+            }
             await _context.SaveChangesAsync();
             return myUser;
         }
