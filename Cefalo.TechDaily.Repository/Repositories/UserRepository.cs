@@ -35,7 +35,6 @@ namespace Cefalo.TechDaily.Repository.Repositories
         public async Task<User?> UpdateUser(string Username, User user)
         {
             var myUser = await _context.Users.FindAsync(Username);
-            if (myUser == null) return null;
             myUser.Email = user.Email;
             myUser.Name = user.Name;
             myUser.UpdatedAt = DateTime.UtcNow;
@@ -51,9 +50,9 @@ namespace Cefalo.TechDaily.Repository.Repositories
         public async Task<Boolean> DeleteUser(string Username)
         {
             var user = await _context.Users.FindAsync(Username);
-            if(user == null) return false;
             _context.Users.Remove((User)user);
             await _context.SaveChangesAsync();
+            // if (user != null) return false;
             return true;
         }
     }

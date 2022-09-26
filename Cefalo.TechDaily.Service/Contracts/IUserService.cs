@@ -10,9 +10,9 @@ namespace Cefalo.TechDaily.Service.Contracts
     public interface IUserService
     {
         Task<List<UserDto>> GetUsers();
-        Task<UserDto?> GetUserByUsername(string Username);
+        Task<UserDto> GetUserByUsername(string Username);
         Task<UserDto> PostUser(SignupDto request);
-        Task<UserDto?> UpdateUser(string Username, UpdateUserDto updateUserDto);
+        Task<UserDto> UpdateUser(string Username, UpdateUserDto updateUserDto);
         Task<Boolean> DeleteUser(string Username);
     }
 }

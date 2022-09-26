@@ -11,16 +11,14 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IAuthService _authService;
-        public UserController(IUserService userService, IAuthService authService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _authService = authService;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto?>>> Getusers()
@@ -44,10 +42,6 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpPatch("{Username}"), Authorize]
         public async Task<IActionResult> UpdateUser(string Username, UpdateUserDto updateUserDto)
         {
-            //if (Username != updateUserDto.Username) return BadRequest("Username does not match");
-            //System.Diagnostics.Debug.WriteLine("hello");
-            var loggedInUser = _authService.GetLoggedinUsername();
-            if (loggedInUser != Username) return BadRequest("You are not authorized to update this user");
             var userDto = await _userService.UpdateUser(Username,updateUserDto);
             if (userDto == null) return BadRequest("User not found");
             return Ok(userDto);
@@ -55,8 +49,6 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpDelete("{Username}"), Authorize]
         public async Task<IActionResult> DeleteUser(string Username)
         {
-            var loggedInUser = _authService.GetLoggedinUsername();
-            if (loggedInUser != Username) return BadRequest("You are not authorized to delete this user");
             var deleted = await _userService.DeleteUser(Username);
             if(!deleted) return BadRequest("User not found");
             return NoContent();

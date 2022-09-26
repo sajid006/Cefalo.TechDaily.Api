@@ -11,5 +11,6 @@ namespace Cefalo.TechDaily.Service.Utils.Contracts
     {
         string CreateToken(User user);
         string GetLoggedinUsername();
+        string GetTokenCreationTime();
     }
 }

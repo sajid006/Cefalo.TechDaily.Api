@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -27,7 +27,6 @@ namespace Cefalo.TechDaily.Api.Controllers
         {
 
             var userDto = await _authService.Signup(request);
-            if (userDto == null) return BadRequest("Cant create user");
             return CreatedAtAction(nameof(Signup), userDto);
         }
 
@@ -35,7 +34,6 @@ namespace Cefalo.TechDaily.Api.Controllers
         public async Task<ActionResult<string>> Login(LoginDto request)
         {
             var token = await _authService.Login(request);
-            if (token == null) return BadRequest("Invalid Username or Password");
             return token;
         }
 

@@ -12,7 +12,13 @@ using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Repository.Repositories;
 using Cefalo.TechDaily.Service.Utils.Contract;
 using Cefalo.TechDaily.Service.Utils.Services;
-
+using Cefalo.TechDaily.Service.Utils.Contracts;
+using Cefalo.TechDaily.Api.GlobalExceptionHandler;
+using Microsoft.Extensions.Logging;
+using Cefalo.TechDaily.Service.DtoValidators;
+using Cefalo.TechDaily.Service.Dto;
+using FluentValidation;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +61,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 //builder.Services.AddSwaggerGen();
+//builder.Services.AddScoped<<LoginDto>, LoginDtoValidator>();
+builder.Services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -64,6 +72,7 @@ builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddScoped<IStoryService, StoryService>();
 
 builder.Services.AddScoped<IPasswordHandler, PasswordHandler>();
+builder.Services.AddScoped<IJwtTokenHandler, JwtTokenHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -71,9 +80,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseExceptionHandler("/error");
+    //app.UseExceptionHandler("/error");
 }
-
+app.ConfigureExceptionHandler();
+//app.ConfigureCustomExceptionMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
