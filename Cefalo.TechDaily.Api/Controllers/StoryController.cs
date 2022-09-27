@@ -14,7 +14,7 @@ namespace Cefalo.TechDaily.Api.Controllers
     public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
-        public StoryController(IStoryService storyService, IAuthService authService)
+        public StoryController(IStoryService storyService)
         {
             _storyService = storyService;
         }

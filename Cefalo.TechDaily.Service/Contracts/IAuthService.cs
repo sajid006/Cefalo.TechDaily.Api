@@ -10,8 +10,8 @@ namespace Cefalo.TechDaily.Service.Contracts
 {
     public interface IAuthService
     {
-        Task<string> Login(LoginDto request);
-        Task<UserDto> Signup(SignupDto request);
+        Task<UserWithToken> Login(LoginDto request);
+        Task<UserWithToken> Signup(SignupDto request);
         Task<UserDto> Logout();
         
     }

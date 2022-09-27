@@ -13,28 +13,23 @@ namespace Cefalo.TechDaily.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService _userService;
         private readonly IAuthService _authService;
-        private readonly IMapper _mapper;
-        public AuthController(IUserService userService, IMapper mapper, IAuthService authService)
+        public AuthController(IAuthService authService)
         {
-            _userService = userService;
-            _mapper = mapper;
             _authService = authService;
         }
         [HttpPost("signup")]
-        public async Task<ActionResult<UserDto>> Signup(SignupDto request)
+        public async Task<ActionResult<UserWithToken>> Signup(SignupDto request)
         {
-
-            var userDto = await _authService.Signup(request);
-            return CreatedAtAction(nameof(Signup), userDto);
+            var userWithToken = await _authService.Signup(request);
+            return CreatedAtAction(nameof(Signup), userWithToken);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
+        public async Task<ActionResult<UserWithToken>> Login(LoginDto request)
         {
-            var token = await _authService.Login(request);
-            return token;
+            var userWithToken = await _authService.Login(request);
+            return userWithToken;
         }
 
     }

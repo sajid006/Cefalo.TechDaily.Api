@@ -11,7 +11,7 @@ namespace Cefalo.TechDaily.Service.Contracts
     {
         Task<List<UserDto>> GetUsers();
         Task<UserDto> GetUserByUsername(string Username);
-        Task<UserDto> PostUser(SignupDto request);
+        Task<UserWithToken> PostUser(SignupDto request);
         Task<UserDto> UpdateUser(string Username, UpdateUserDto updateUserDto);
         Task<Boolean> DeleteUser(string Username);
     }

@@ -15,6 +15,7 @@ using System.Runtime.ConstrainedExecution;
 using Cefalo.TechDaily.Service.Utils.Contracts;
 using Cefalo.TechDaily.Service.CustomExceptions;
 using FluentValidation;
+using Cefalo.TechDaily.Service.DtoValidators;
 
 namespace Cefalo.TechDaily.Service.Services
 {
@@ -24,25 +25,35 @@ namespace Cefalo.TechDaily.Service.Services
         private readonly IMapper _mapper;
         private readonly IPasswordHandler _passwordHandler;
         private readonly IJwtTokenHandler _jwtTokenHandler;
-        public UserService(IUserRepository userRepository, IMapper mapper, IPasswordHandler passwordHandler, IJwtTokenHandler jwtTokenHandler)
+        private readonly BaseDtoValidator<UserWithToken> _userWithTokenValidator;
+        private readonly BaseDtoValidator<UserDto> _userDtoValidator;
+        public UserService(IUserRepository userRepository, IMapper mapper, IPasswordHandler passwordHandler, IJwtTokenHandler jwtTokenHandler, BaseDtoValidator<UserWithToken> userWithTokenValidator, BaseDtoValidator<UserDto> userDtoValidator)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _passwordHandler = passwordHandler;
             _jwtTokenHandler = jwtTokenHandler;
+            _userWithTokenValidator = userWithTokenValidator;
+            _userDtoValidator = userDtoValidator;
         }
         public async Task<List<UserDto>> GetUsers()
         {
             var users = await _userRepository.GetUsers();
-            return users.Select(user => _mapper.Map<UserDto>(user)).ToList();
+            var userList =  users.Select(user => _mapper.Map<UserDto>(user)).ToList();
+            foreach(var user in userList){
+                _userDtoValidator.ValidateDTO(user);
+            }
+            return userList;
         }
         public async Task<UserDto> GetUserByUsername(string Username)
         {
             var user = await _userRepository.GetUserByUsername(Username);
             if (user == null) throw new NotFoundException("User not found");
-            return _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<UserDto>(user);
+            _userDtoValidator.ValidateDTO(userDto);
+            return userDto;
         }
-        public async Task<UserDto> PostUser(SignupDto request)
+        public async Task<UserWithToken> PostUser(SignupDto request)
         {
             _passwordHandler.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var user = _mapper.Map<User>(request);
@@ -52,9 +63,10 @@ namespace Cefalo.TechDaily.Service.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             var newUser = await _userRepository.PostUser(user);
-            if (newUser == null) throw new BadRequestException("Cant add user");
-            var userDto = _mapper.Map<UserDto>(newUser);
-            return userDto;
+            var userWithToken = _mapper.Map<UserWithToken>(newUser);
+            userWithToken.Token = _jwtTokenHandler.CreateToken(newUser);
+            _userWithTokenValidator.ValidateDTO(userWithToken);
+            return userWithToken;
         }
 
         public async Task<UserDto> UpdateUser(string Username, UpdateUserDto updateUserDto)
@@ -78,6 +90,7 @@ namespace Cefalo.TechDaily.Service.Services
             user.UpdatedAt = DateTime.UtcNow;
             var newUser = await _userRepository.UpdateUser(Username, user);
             var userDto = _mapper.Map<UserDto>(newUser);
+            _userDtoValidator.Validate(userDto);
             return userDto;
         }
         public async Task<Boolean> DeleteUser(string Username)
@@ -90,7 +103,6 @@ namespace Cefalo.TechDaily.Service.Services
             if (tokenCreationTimeString == null) throw new UnauthorizedException("Please login again");
             DateTime tokenCreationTime = Convert.ToDateTime(tokenCreationTimeString);
             if (DateTime.Compare(tokenCreationTime, currentUser.PasswordModifiedAt) < 0) throw new UnauthorizedException("Please login again");
-
             return await _userRepository.DeleteUser(Username);
         }
 

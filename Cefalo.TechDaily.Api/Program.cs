@@ -17,14 +17,23 @@ using Cefalo.TechDaily.Api.GlobalExceptionHandler;
 using Microsoft.Extensions.Logging;
 using Cefalo.TechDaily.Service.DtoValidators;
 using Cefalo.TechDaily.Service.Dto;
-using FluentValidation;
+using Cefalo.TechDaily.Api.CustomOutputFormatter;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(config =>
+{
+    config.RespectBrowserAcceptHeader = true;
+}).AddXmlDataContractSerializerFormatters()
+            .AddMvcOptions(option =>
+            {
+                option.OutputFormatters.Add(new CsvOutputFormatter());
+                option.OutputFormatters.Add(new PlainTextOutputFormatter());
+                option.OutputFormatters.Add(new HtmlOutputFormatter());
+            });
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -61,8 +70,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 //builder.Services.AddSwaggerGen();
-//builder.Services.AddScoped<<LoginDto>, LoginDtoValidator>();
-builder.Services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
+
+//DTO validators
+builder.Services.AddScoped<BaseDtoValidator<LoginDto>, LoginDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<PostStoryDto>, PostStoryDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<SignupDto>, SignupDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<UpdateStoryDto>, UpdateStoryDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<UpdateUserDto>, UpdateUserDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<UserDto>, UserDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<UserWithToken>, UserWithTokenValidator>();
+
+//Interfaces
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -80,10 +98,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    //app.UseExceptionHandler("/error");
 }
 app.ConfigureExceptionHandler();
-//app.ConfigureCustomExceptionMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace Cefalo.TechDaily.Service.DtoValidators
 {
-    public class LoginDtoValidator : AbstractValidator<LoginDto>
+    public class LoginDtoValidator : BaseDtoValidator<LoginDto>
     {
         public LoginDtoValidator()
         {
-            RuleFor(x => x.Username).NotEmpty();
-            RuleFor(x => x.Password).NotEmpty();
-
+            RuleFor(x => x.Username).NotEmpty().WithMessage("Username cannot be empty");
+            RuleFor(x => x.Password).NotEmpty().WithMessage("password cannot be empty");
         }
 
     }
