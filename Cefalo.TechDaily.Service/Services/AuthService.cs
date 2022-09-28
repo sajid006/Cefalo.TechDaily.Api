@@ -32,6 +32,7 @@ namespace Cefalo.TechDaily.Service.Services
         private readonly BaseDtoValidator<LoginDto> _loginDtoValidator;
         private readonly BaseDtoValidator<SignupDto> _signupDtoValidator;
         private readonly BaseDtoValidator<UserWithToken> _userWithTokenValidator;
+
         public AuthService(IUserRepository userRepository, IMapper mapper, IPasswordHandler passwordHandler, IJwtTokenHandler jwtTokenHandler, BaseDtoValidator<LoginDto> loginDtoValidator, BaseDtoValidator<SignupDto> signupDtoValidator, BaseDtoValidator<UserWithToken> userWithTokenValidator)
         {
             _userRepository = userRepository;
@@ -68,9 +69,15 @@ namespace Cefalo.TechDaily.Service.Services
             var userWithToken = _mapper.Map<UserWithToken>(user);
             userWithToken.Token = _jwtTokenHandler.CreateToken(user);
             _userWithTokenValidator.ValidateDTO(userWithToken);
+            
             return userWithToken;
         }
 
+        public async Task<string> GetCurrentUser()
+        {
+            var username = _jwtTokenHandler.GetLoggedinUsername();
+            return username;
+        }
         public Task<UserDto> Logout()
         {
             throw new NotImplementedException();

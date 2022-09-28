@@ -1,17 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc.Formatters;
-using System.Text;
-using System;
-using System.Threading.Tasks;
+﻿using Cefalo.TechDaily.Database.Models;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
-using Cefalo.TechDaily.Database.Models;
+using System.Text;
 
-namespace Cefalo.TechDaily.Api.CustomOutputFormatter
+namespace Cefalo.TechDaily.Api.CustomOutputFormatter.StoryOutputFormatter
 {
-    public class HtmlOutputFormatter : TextOutputFormatter
+    public class PlainTextStoryOutputFormatter : TextOutputFormatter
     {
-        public HtmlOutputFormatter()
+        public PlainTextStoryOutputFormatter()
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/html"));
+            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/plain"));
             SupportedEncodings.Add(Encoding.UTF8);
             SupportedEncodings.Add(Encoding.Unicode);
         }
@@ -38,12 +36,13 @@ namespace Cefalo.TechDaily.Api.CustomOutputFormatter
 
         private static void FormatData(StringBuilder buffer, Story story)
         {
-            buffer.AppendLine($"<p><h4>Id: {story.Id}</h4></p>");
-            buffer.AppendLine($"<p><h4>Title: {story.Title}</h4></p>");
-            buffer.AppendLine($"<p><h2>Authorname: {story.AuthorName}</h2></p>");
-            buffer.AppendLine($"<p>Description: {story.Description}</p>");
-            buffer.AppendLine($"<p><small>Created At: {story.CreatedAt}</small></p>");
-            buffer.AppendLine($"<p><small>Updated At: {story.UpdatedAt}</small></p>");
+            buffer.AppendLine($"Id: {story.Id}");
+            buffer.AppendLine($"Title: {story.Title}");
+            buffer.AppendLine($"Authorname: {story.AuthorName}");
+            buffer.AppendLine($"Description: {story.Description}");
+            buffer.AppendLine($"Created At: {story.CreatedAt}");
+            buffer.AppendLine($"Updated At: {story.UpdatedAt}");
+            buffer.AppendLine();
         }
         protected override bool CanWriteType(Type type)
         {

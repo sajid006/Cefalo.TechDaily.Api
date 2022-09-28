@@ -42,7 +42,7 @@ namespace Cefalo.TechDaily.Api.Controllers
 
         [HttpPatch("{Id}"), Authorize]
         public async Task<IActionResult> UpdateStory(int Id, UpdateStoryDto updateStoryDto)
-        {   
+        {
             var story = await _storyService.UpdateStory(Id, updateStoryDto);
             if (story == null) return BadRequest("Story not found");
             return Ok(story);
@@ -54,6 +54,18 @@ namespace Cefalo.TechDaily.Api.Controllers
             if (!deleted) return BadRequest("Story not found");
             return NoContent();
         }
-        
+        [HttpGet("search/{pattern}")]
+        public async Task<ActionResult<IEnumerable<Story>>> GetSearchedStories(string pattern)
+        {
+            var stories = await _storyService.GetSearchedStories(pattern);
+            return Ok(stories);
+
+        }
+        [HttpGet("users/{username}")]
+        public async Task<ActionResult<IEnumerable<Story>>> GetStoriesOfAUser(string username)
+        {
+            var stories = await _storyService.GetStoriesOfAUser(username);
+            return Ok(stories);
+        }
     }
 }

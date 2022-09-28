@@ -1,13 +1,14 @@
 ﻿using Cefalo.TechDaily.Database.Models;
+using Cefalo.TechDaily.Service.Dto;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System.Text;
 
-namespace Cefalo.TechDaily.Api.CustomOutputFormatter
+namespace Cefalo.TechDaily.Api.CustomOutputFormatter.UserOutputFormatter
 {
-    public class PlainTextOutputFormatter: TextOutputFormatter
+    public class PlainTextUserOutputFormatter: TextOutputFormatter
     {
-        public PlainTextOutputFormatter()
+        public PlainTextUserOutputFormatter()
         {
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/plain"));
             SupportedEncodings.Add(Encoding.UTF8);
@@ -19,38 +20,39 @@ namespace Cefalo.TechDaily.Api.CustomOutputFormatter
             var response = context.HttpContext.Response;
 
             var buffer = new StringBuilder();
-            if (context.Object is IEnumerable<Story>)
+            if (context.Object is IEnumerable<UserDto>)
             {
-                foreach (var story in context.Object as IEnumerable<Story>)
+                foreach (var user in context.Object as IEnumerable<UserDto>)
                 {
-                    FormatData(buffer, story);
+                    FormatData(buffer, user);
                 }
             }
             else
             {
-                var story = context.Object as Story;
-                FormatData(buffer, story);
+                var user = context.Object as UserDto;
+                FormatData(buffer, user);
             }
             return response.WriteAsync(buffer.ToString());
         }
 
-        private static void FormatData(StringBuilder buffer, Story story)
+        private static void FormatData(StringBuilder buffer, UserDto user)
         {
-            buffer.AppendLine($"Id: {story.Id}");
-            buffer.AppendLine($"Title: {story.Title}");
-            buffer.AppendLine($"Authorname: {story.AuthorName}");
-            buffer.AppendLine($"Description: {story.Description}");
-            buffer.AppendLine($"Created At: {story.CreatedAt}");
-            buffer.AppendLine($"Updated At: {story.UpdatedAt}");
+            buffer.AppendLine($"Username: {user.Username}");
+            buffer.AppendLine($"Name: {user.Name}");
+            buffer.AppendLine($"Email: {user.Email}");
+            buffer.AppendLine($"Created At: {user.CreatedAt}");
+            buffer.AppendLine($"Updated At: {user.UpdatedAt}");
+            buffer.AppendLine();
         }
         protected override bool CanWriteType(Type type)
         {
-            if (typeof(Story).IsAssignableFrom(type)
-                || typeof(IEnumerable<Story>).IsAssignableFrom(type))
+            if (typeof(UserDto).IsAssignableFrom(type)
+                || typeof(IEnumerable<UserDto>).IsAssignableFrom(type))
             {
                 return base.CanWriteType(type);
             }
             return false;
         }
+    
     }
 }

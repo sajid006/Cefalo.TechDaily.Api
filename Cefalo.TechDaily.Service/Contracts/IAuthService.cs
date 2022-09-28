@@ -12,6 +12,7 @@ namespace Cefalo.TechDaily.Service.Contracts
     {
         Task<UserWithToken> Login(LoginDto request);
         Task<UserWithToken> Signup(SignupDto request);
+        Task<string> GetCurrentUser();
         Task<UserDto> Logout();
         
     }

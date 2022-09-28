@@ -53,6 +53,7 @@ namespace Cefalo.TechDaily.Api.Controllers
             if(!deleted) return BadRequest("User not found");
             return NoContent();
         }
+        
     }
 }
 

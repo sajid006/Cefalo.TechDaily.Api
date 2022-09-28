@@ -1,15 +1,17 @@
-﻿using Cefalo.TechDaily.Database.Models;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Net.Http.Headers;
+﻿using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Text;
+using System;
+using System.Threading.Tasks;
+using Microsoft.Net.Http.Headers;
+using Cefalo.TechDaily.Database.Models;
 
-namespace Cefalo.TechDaily.Api.CustomOutputFormatter
+namespace Cefalo.TechDaily.Api.CustomOutputFormatter.StoryOutputFormatter
 {
-    public class CsvOutputFormatter : TextOutputFormatter
+    public class HtmlStoryOutputFormatter : TextOutputFormatter
     {
-        public CsvOutputFormatter()
+        public HtmlStoryOutputFormatter()
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/csv"));
+            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/html"));
             SupportedEncodings.Add(Encoding.UTF8);
             SupportedEncodings.Add(Encoding.Unicode);
         }
@@ -36,7 +38,13 @@ namespace Cefalo.TechDaily.Api.CustomOutputFormatter
 
         private static void FormatData(StringBuilder buffer, Story story)
         {
-            buffer.AppendLine($"{story.Id},{story.Title},{story.AuthorName},{story.Description},{story.CreatedAt},{story.UpdatedAt}");
+            buffer.AppendLine($"<p><h4>Id: {story.Id}</h4></p>");
+            buffer.AppendLine($"<p><h4>Title: {story.Title}</h4></p>");
+            buffer.AppendLine($"<p><h2>Authorname: {story.AuthorName}</h2></p>");
+            buffer.AppendLine($"<p>Description: {story.Description}</p>");
+            buffer.AppendLine($"<p><small>Created At: {story.CreatedAt}</small></p>");
+            buffer.AppendLine($"<p><small>Updated At: {story.UpdatedAt}</small></p>");
+            buffer.AppendLine();
         }
         protected override bool CanWriteType(Type type)
         {

@@ -2,6 +2,7 @@
 using Cefalo.TechDaily.Database.Models;
 using Cefalo.TechDaily.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,14 @@ namespace Cefalo.TechDaily.Repository.Repositories
             _context.Stories.Remove((Story)story);
             await _context.SaveChangesAsync();
             return true;
+        }
+        public async Task<List<Story>> GetSearchedStories(string pattern)
+        {
+            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).ToListAsync();
+        }
+        public async Task<List<Story>> GetStoriesOfAUser(string username)
+        {
+            return await _context.Stories.Where(s => s.AuthorName == username).ToListAsync();
         }
     }
 }

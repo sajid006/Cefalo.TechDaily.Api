@@ -15,6 +15,8 @@ namespace Cefalo.TechDaily.Service.Contracts
         Task<Story> PostStory(PostStoryDto postStoryDto);
         Task<Story> UpdateStory(int Id, UpdateStoryDto updateStoryDto);
         Task<Boolean> DeleteStory(int Id);
+        Task<List<Story>> GetSearchedStories(string pattern);
+        Task<List<Story>> GetStoriesOfAUser(string username);
 
     }
 }

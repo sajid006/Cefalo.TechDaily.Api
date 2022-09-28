@@ -14,5 +14,7 @@ namespace Cefalo.TechDaily.Repository.Contracts
         Task<Story?> PostStory(Story story);
         Task<Story?> UpdateStory(int Id, Story story);
         Task<Boolean> DeleteStory(int Id);
+        Task<List<Story>> GetSearchedStories(string pattern);
+        Task<List<Story>> GetStoriesOfAUser(string username);
     }
 }

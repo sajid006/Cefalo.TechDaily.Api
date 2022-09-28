@@ -74,6 +74,16 @@ namespace Cefalo.TechDaily.Service.Services
             if (!auth) throw new UnauthorizedException("You are not authorized to update this story");
             return await _storyRepository.DeleteStory(Id);
         }
+        public async Task<List<Story>> GetSearchedStories(string pattern)
+        {
+            var stories = await _storyRepository.GetSearchedStories(pattern);
+            return stories.ToList();
+        }
+        public async Task<List<Story>> GetStoriesOfAUser(string username)
+        {
+            var stories = await _storyRepository.GetStoriesOfAUser(username);
+            return stories.ToList();
+        }
         private async Task<Boolean> CheckAuthor(string loggedInUser, int Id)
         {
             if (loggedInUser == null) return false;
