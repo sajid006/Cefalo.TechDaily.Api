@@ -7,6 +7,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.AspNetCore.Authorization;
 using Cefalo.TechDaily.Service.Services;
+using Cefalo.TechDaily.Service.Utils.Contracts;
+using Cefalo.TechDaily.Service.CustomExceptions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
@@ -15,11 +18,13 @@ namespace Cefalo.TechDaily.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public AuthController(IAuthService authService, IHttpContextAccessor httpContextAccessor)
+        private readonly ICookieHandler _cookieHandler;
+        private readonly IJwtTokenHandler _jwtTokenHandler;
+        public AuthController(IAuthService authService,IJwtTokenHandler jwtTokenHandler, ICookieHandler cookieHandler)
         {
             _authService = authService;
-            _httpContextAccessor = httpContextAccessor;
+            _cookieHandler = cookieHandler;
+            _jwtTokenHandler = jwtTokenHandler;
         }
         [HttpPost("signup")]
         public async Task<ActionResult<UserWithToken>> Signup(SignupDto request)
@@ -32,14 +37,19 @@ namespace Cefalo.TechDaily.Api.Controllers
         public async Task<ActionResult<UserWithToken>> Login(LoginDto request)
         {
             var userWithToken = await _authService.Login(request);
-            Response.Cookies.Append("user", userWithToken.Token);
-            return Ok(Response);
+            _cookieHandler.Set("user", userWithToken.Token,100000);
+            return Ok(userWithToken);
         }
         [HttpPost("verifytoken")]
-        public async Task<string> VerifyToken()
+        public async Task<ActionResult<string>> VerifyToken(TokenDto tokenDto)
         {
-            return await _authService.GetCurrentUser();
+            var token = tokenDto.Token;
+            if (token.IsNullOrEmpty()) return null;
+            if (_jwtTokenHandler.HttpContextExists() == false) return null;
+            var username = _jwtTokenHandler.VerifyToken(token);
+            return username;
         }
+        
 
     }
 }

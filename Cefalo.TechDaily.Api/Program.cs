@@ -104,6 +104,7 @@ builder.Services.AddScoped<IStoryService, StoryService>();
 
 builder.Services.AddScoped<IPasswordHandler, PasswordHandler>();
 builder.Services.AddScoped<IJwtTokenHandler, JwtTokenHandler>();
+builder.Services.AddScoped<ICookieHandler, CookieHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

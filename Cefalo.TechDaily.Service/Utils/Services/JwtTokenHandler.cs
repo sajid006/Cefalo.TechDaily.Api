@@ -39,6 +39,29 @@ namespace Cefalo.TechDaily.Service.Utils.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
 
+
+        }
+        public string VerifyToken(string token)
+        {
+
+            var validationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = false,
+                SignatureValidator = delegate (string token, TokenValidationParameters parameters)
+                {
+                    var jwt = new JwtSecurityToken(token);
+
+                    return jwt;
+                },
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken validatedToken = new JwtSecurityToken();
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+            if (principal == null) return null;
+            return principal.FindFirstValue(ClaimTypes.Name);
+            
         }
         public string GetLoggedinUsername()
         {
@@ -57,6 +80,10 @@ namespace Cefalo.TechDaily.Service.Utils.Services
                 result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Expiration);
             }
             return result;
+        }
+        public Boolean HttpContextExists()
+        {
+            return _httpContextAccessor.HttpContext != null;
         }
     }
 }
