@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using Cefalo.TechDaily.Service.Dto;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Cefalo.TechDaily.Api.Wrappers;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
@@ -31,6 +32,7 @@ namespace Cefalo.TechDaily.Api.Controllers
             var user = await _userService.GetUserByUsername(Username);
             if (user == null) return BadRequest("User not found");
             return Ok(user);
+            //return Ok(new Response<UserDto>(user));
         }
         [HttpPost]
         public async Task<IActionResult> PostUser(SignupDto request)

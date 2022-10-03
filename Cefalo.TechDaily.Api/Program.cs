@@ -21,17 +21,17 @@ using Cefalo.TechDaily.Api.CustomOutputFormatter.StoryOutputFormatter;
 using Cefalo.TechDaily.Api.CustomOutputFormatter.UserOutputFormatter;
 using System;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:3001").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-                      });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                      policy =>
+//                      {
+//                          policy.WithOrigins("http://localhost:3001").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+//                      });
+//});
 // Add services to the container.
 
 builder.Services.AddControllers(config =>
@@ -51,11 +51,27 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3001", "https://localhost:3001")
+        .AllowCredentials()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddSingleton<IUriService>(o =>
+{
+    var accessor = o.GetRequiredService<IHttpContextAccessor>();
+    var request = accessor.HttpContext.Request;
+    var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+    return new UriService(uri);
+});
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -116,7 +132,7 @@ if (app.Environment.IsDevelopment())
 app.ConfigureExceptionHandler();
 app.UseHttpsRedirection();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 
 app.UseAuthentication();
 

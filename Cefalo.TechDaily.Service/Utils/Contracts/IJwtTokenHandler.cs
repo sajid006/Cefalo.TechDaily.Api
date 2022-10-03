@@ -15,5 +15,6 @@ namespace Cefalo.TechDaily.Service.Utils.Contracts
         string GetLoggedinUsername();
         string GetTokenCreationTime();
         Boolean HttpContextExists();
+        void DeleteToken();
     }
 }

@@ -80,8 +80,9 @@ namespace Cefalo.TechDaily.Service.Services
             DateTime tokenCreationTime = Convert.ToDateTime(tokenCreationTimeString); 
             if(DateTime.Compare(tokenCreationTime,currentUser.PasswordModifiedAt)<0) throw new UnauthorizedException("Please login again");
             User user = _mapper.Map<User>(updateUserDto);
-            if (updateUserDto.Password != null)
+            if (updateUserDto.Password != null && updateUserDto.Password != "")
             {
+                if (updateUserDto.Password.Length < 8) throw new BadRequestException("Password length must be at least 8");
                 _passwordHandler.CreatePasswordHash(updateUserDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;

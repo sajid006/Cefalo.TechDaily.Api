@@ -37,17 +37,23 @@ namespace Cefalo.TechDaily.Api.Controllers
         public async Task<ActionResult<UserWithToken>> Login(LoginDto request)
         {
             var userWithToken = await _authService.Login(request);
-            _cookieHandler.Set("user", userWithToken.Token,100000);
+            //_cookieHandler.Set("user", userWithToken.Token,100000);
             return Ok(userWithToken);
         }
-        [HttpPost("verifytoken")]
-        public async Task<ActionResult<string>> VerifyToken(TokenDto tokenDto)
+        [HttpPost("verifytoken"),Authorize]
+        public async Task<ActionResult<string?>> Verify()
         {
-            var token = tokenDto.Token;
-            if (token.IsNullOrEmpty()) return null;
-            if (_jwtTokenHandler.HttpContextExists() == false) return null;
-            var username = _jwtTokenHandler.VerifyToken(token);
-            return username;
+            
+            var loggedInUser = await _authService.GetCurrentUser();
+            if (loggedInUser == null) return null;
+            return loggedInUser.ToString();
+            
+        }
+        [HttpGet("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            _authService.Logout();
+            return Ok();
         }
         
 

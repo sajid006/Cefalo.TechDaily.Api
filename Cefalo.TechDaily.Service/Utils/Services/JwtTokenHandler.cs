@@ -85,5 +85,9 @@ namespace Cefalo.TechDaily.Service.Utils.Services
         {
             return _httpContextAccessor.HttpContext != null;
         }
+        public void DeleteToken()
+        {
+            _httpContextAccessor.HttpContext = null;
+        }
     }
 }

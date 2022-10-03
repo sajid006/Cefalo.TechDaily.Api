@@ -19,9 +19,10 @@ namespace Cefalo.TechDaily.Repository.Repositories
             _context = context;
         }
 
-        public async Task<List<Story>> GetStories()
+        public async Task<List<Story>> GetStories(int pageNumber,int pageSize)
         {
-            return await _context.Stories.ToListAsync();
+            //return await _context.Stories.ToListAsync();
+            return await _context.Stories.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
         public async Task<Story?> GetStoryById(int Id)
         {
@@ -52,13 +53,23 @@ namespace Cefalo.TechDaily.Repository.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<List<Story>> GetSearchedStories(string pattern)
-        {
-            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).ToListAsync();
-        }
         public async Task<List<Story>> GetStoriesOfAUser(string username)
         {
             return await _context.Stories.Where(s => s.AuthorName == username).ToListAsync();
+        }
+        public async Task<int> CountStories()
+        {
+            return await _context.Stories.CountAsync(); 
+        }
+
+        public async Task<List<Story>> GetSearchedStories(int pageNumber, int pageSize, string pattern)
+        {
+            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<int> CountSearchedStories(string pattern)
+        {
+            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).CountAsync();
         }
     }
 }

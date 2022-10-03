@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pagination\" />
     <Folder Include="Utils\" />
   </ItemGroup>
 

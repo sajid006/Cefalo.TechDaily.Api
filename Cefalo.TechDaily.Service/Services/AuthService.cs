@@ -73,14 +73,17 @@ namespace Cefalo.TechDaily.Service.Services
             return userWithToken;
         }
 
-        public async Task<string> GetCurrentUser()
+        public async Task<string?> GetCurrentUser()
         {
+            if (_jwtTokenHandler.HttpContextExists() == false) return null;
             var username = _jwtTokenHandler.GetLoggedinUsername();
+            var user = await _userRepository.GetUserByUsername(username);
+            if (user == null) return null;
             return username;
         }
-        public Task<UserDto> Logout()
+        public async void Logout()
         {
-            throw new NotImplementedException();
+            _jwtTokenHandler.DeleteToken();
         }
 
     }

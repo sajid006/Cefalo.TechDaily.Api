@@ -15,9 +15,6 @@ namespace Cefalo.TechDaily.Service.DtoValidators
         {
             RuleFor(x => x.Email).EmailAddress().WithMessage("Invalid Email address");
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name cannot be empty");
-            RuleFor(x => x.Password)
-                .MinimumLength(8).WithMessage("Password length must be at least 8")
-                .When(x => !x.Password.IsNullOrEmpty());
         }
     }
 }
