@@ -9,14 +9,15 @@ namespace Cefalo.TechDaily.Repository.Contracts
 {
     public interface IStoryRepository
     {
-        Task<List<Story>> GetStories(int pageNumber,int pageSize);
-        Task<Story?> GetStoryById(int Id);
-        Task<Story?> PostStory(Story story);
-        Task<Story?> UpdateStory(int Id, Story story);
-        Task<Boolean> DeleteStory(int Id);
-        Task<List<Story>> GetSearchedStories(int pageNumber, int pageSize, string pattern);
-        Task<List<Story>> GetStoriesOfAUser(string username);
-        Task<int> CountStories();
-        Task<int> CountSearchedStories(string pattern);
+        Task<List<Story>> GetStoriesAsync(int pageNumber,int pageSize);
+        Task<Story?> GetStoriesAsync(int Id);
+        Task<Story?> PostStoryAsync(Story story);
+        Task<Story?> UpdateStoryAsync(int Id, Story story);
+        Task<Boolean> DeleteStoryAsync(int Id);
+        Task<List<Story>> GetSearchedStoriesAsync(int pageNumber, int pageSize, string pattern);
+        Task<List<Story>> GetStoriesOfAUserAsync(int pageNumber, int pageSize, string username);
+        Task<int> CountStoriesAsync();
+        Task<int> CountSearchedStoriesAsync(string pattern);
+        Task<int> CountStoriesOfAUserAsync(string username);
     }
 }

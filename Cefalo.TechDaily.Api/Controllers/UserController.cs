@@ -22,36 +22,36 @@ namespace Cefalo.TechDaily.Api.Controllers
             _userService = userService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto?>>> Getusers()
+        public async Task<ActionResult<IEnumerable<UserDto?>>> GetusersAsync()
         {
-            return Ok(await _userService.GetUsers());
+            return Ok(await _userService.GetUsersAsync());
         }
         [HttpGet("{Username}")]
-        public async Task<IActionResult> GetUserByUsername(string Username)
+        public async Task<IActionResult> GetUserByUsernameAsync(string Username)
         {
-            var user = await _userService.GetUserByUsername(Username);
+            var user = await _userService.GetUserByUsernameAsync(Username);
             if (user == null) return BadRequest("User not found");
             return Ok(user);
             //return Ok(new Response<UserDto>(user));
         }
         [HttpPost]
-        public async Task<IActionResult> PostUser(SignupDto request)
+        public async Task<IActionResult> PostUserAsync(SignupDto request)
         {
-            var userDto = await _userService.PostUser(request);
+            var userDto = await _userService.PostUserAsync(request);
             if (userDto == null) return BadRequest("Cant create user");
-            return CreatedAtAction(nameof(PostUser),userDto);
+            return CreatedAtAction(nameof(PostUserAsync),userDto);
         }
         [HttpPatch("{Username}"), Authorize]
-        public async Task<IActionResult> UpdateUser(string Username, UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateUserAsync(string Username, UpdateUserDto updateUserDto)
         {
-            var userDto = await _userService.UpdateUser(Username,updateUserDto);
+            var userDto = await _userService.UpdateUserAsync(Username,updateUserDto);
             if (userDto == null) return BadRequest("User not found");
             return Ok(userDto);
         }
         [HttpDelete("{Username}"), Authorize]
-        public async Task<IActionResult> DeleteUser(string Username)
+        public async Task<IActionResult> DeleteUserAsync(string Username)
         {
-            var deleted = await _userService.DeleteUser(Username);
+            var deleted = await _userService.DeleteUserAsync(Username);
             if(!deleted) return BadRequest("User not found");
             return NoContent();
         }

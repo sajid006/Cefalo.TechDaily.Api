@@ -5,7 +5,6 @@ using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.CustomExceptions;
 using Cefalo.TechDaily.Service.Dto;
 using Cefalo.TechDaily.Service.DtoValidators;
-using Cefalo.TechDaily.Service.Utils.Contract;
 using Cefalo.TechDaily.Service.Utils.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -43,7 +42,7 @@ namespace Cefalo.TechDaily.Service.Services
             _signupDtoValidator = signupDtoValidator;
             _userWithTokenValidator = userWithTokenValidator;
         }
-        public async Task<UserWithToken> Signup(SignupDto request)
+        public async Task<UserWithToken> SignupAsync(SignupDto request)
         {
             _signupDtoValidator.ValidateDTO(request);
             _passwordHandler.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -53,16 +52,16 @@ namespace Cefalo.TechDaily.Service.Services
             user.PasswordModifiedAt = DateTime.UtcNow;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            var newUser = await _userRepository.PostUser(user);
+            var newUser = await _userRepository.PostUserAsync(user);
             var userWithToken = _mapper.Map<UserWithToken>(newUser);
             userWithToken.Token = _jwtTokenHandler.CreateToken(newUser);
             _userWithTokenValidator.ValidateDTO(userWithToken);
             return userWithToken;
         }
-        public async Task<UserWithToken> Login(LoginDto request)
+        public async Task<UserWithToken> LoginAsync(LoginDto request)
         {
             _loginDtoValidator.ValidateDTO(request);
-            var user = await _userRepository.GetUserByUsername(request.Username);
+            var user = await _userRepository.GetUserByUsernameAsync(request.Username);
             if (user == null) throw new BadRequestException("Invalid username or password");
             bool isPasswordCorrect = _passwordHandler.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt);
             if (!isPasswordCorrect) throw new BadRequestException("Invalid username or password");
@@ -73,15 +72,15 @@ namespace Cefalo.TechDaily.Service.Services
             return userWithToken;
         }
 
-        public async Task<string?> GetCurrentUser()
+        public async Task<string?> GetCurrentUserAsync()
         {
             if (_jwtTokenHandler.HttpContextExists() == false) return null;
             var username = _jwtTokenHandler.GetLoggedinUsername();
-            var user = await _userRepository.GetUserByUsername(username);
-            if (user == null) return null;
+            //var user = await _userRepository.GetUserByUsernameAsync(username);
+            //if (user == null) return null;
             return username;
         }
-        public async void Logout()
+        public async void LogoutAsync()
         {
             _jwtTokenHandler.DeleteToken();
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cefalo.TechDaily.Service.Utils.Contract
+namespace Cefalo.TechDaily.Service.Utils.Contracts
 {
     public interface IPasswordHandler
     {

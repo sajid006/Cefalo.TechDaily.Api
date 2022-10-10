@@ -1,4 +1,4 @@
-﻿using Cefalo.TechDaily.Service.Utils.Contract;
+﻿using Cefalo.TechDaily.Service.Utils.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

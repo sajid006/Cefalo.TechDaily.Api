@@ -9,11 +9,11 @@ namespace Cefalo.TechDaily.Service.Contracts
 {
     public interface IUserService
     {
-        Task<List<UserDto>> GetUsers();
-        Task<UserDto> GetUserByUsername(string Username);
-        Task<UserWithToken> PostUser(SignupDto request);
-        Task<UserDto> UpdateUser(string Username, UpdateUserDto updateUserDto);
-        Task<Boolean> DeleteUser(string Username);
+        Task<List<UserDto>> GetUsersAsync();
+        Task<UserDto> GetUserByUsernameAsync(string Username);
+        Task<UserWithToken> PostUserAsync(SignupDto request);
+        Task<UserDto> UpdateUserAsync(string Username, UpdateUserDto updateUserDto);
+        Task<Boolean> DeleteUserAsync(string Username);
 
     }
 }

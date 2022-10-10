@@ -18,41 +18,43 @@ namespace Cefalo.TechDaily.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly ICookieHandler _cookieHandler;
+
         private readonly IJwtTokenHandler _jwtTokenHandler;
-        public AuthController(IAuthService authService,IJwtTokenHandler jwtTokenHandler, ICookieHandler cookieHandler)
+        public AuthController(IAuthService authService,IJwtTokenHandler jwtTokenHandler)
         {
             _authService = authService;
-            _cookieHandler = cookieHandler;
             _jwtTokenHandler = jwtTokenHandler;
         }
-        [HttpPost("signup")]
-        public async Task<ActionResult<UserWithToken>> Signup(SignupDto request)
+
+        public AuthController()
         {
-            var userWithToken = await _authService.Signup(request);
-            return CreatedAtAction(nameof(Signup), userWithToken);
+        }
+
+        [HttpPost("signup")]
+        public async Task<ActionResult<UserWithToken>> SignupAsync(SignupDto request)
+        {
+            var userWithToken = await _authService.SignupAsync(request);
+            return CreatedAtAction(nameof(SignupAsync), userWithToken);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserWithToken>> Login(LoginDto request)
+        public async Task<ActionResult<UserWithToken>> LoginAsync(LoginDto request)
         {
-            var userWithToken = await _authService.Login(request);
+            var userWithToken = await _authService.LoginAsync(request);
             //_cookieHandler.Set("user", userWithToken.Token,100000);
             return Ok(userWithToken);
         }
-        [HttpPost("verifytoken"),Authorize]
-        public async Task<ActionResult<string?>> Verify()
+        [HttpPost("verifytoken")]
+        public async Task<ActionResult<string?>> VerifyAsync()
         {
-            
-            var loggedInUser = await _authService.GetCurrentUser();
+            var loggedInUser = await _authService.GetCurrentUserAsync();
             if (loggedInUser == null) return null;
             return loggedInUser.ToString();
-            
         }
         [HttpGet("logout")]
-        public async Task<ActionResult> Logout()
+        public async Task<ActionResult> LogoutAsync()
         {
-            _authService.Logout();
+            _authService.LogoutAsync();
             return Ok();
         }
         

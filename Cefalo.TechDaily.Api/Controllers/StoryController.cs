@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cefalo.TechDaily.Api.Helpers;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
@@ -25,62 +26,66 @@ namespace Cefalo.TechDaily.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Story>>> GetStories([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<IEnumerable<Story>>> GetStoriesAsync([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var pagedData = await _storyService.GetStories(validFilter.PageNumber,validFilter.PageSize);
-            var totalRecords = await _storyService.CountStories();
+            var pagedData = await _storyService.GetStoriesAsync(validFilter.PageNumber,validFilter.PageSize);
+            var totalRecords = await _storyService.CountStoriesAsync();
             var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
             //return Ok(await _storyService.GetStories(1, 1));
         }
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetStory(int Id)
+        public async Task<IActionResult> GetStoryAsync(int Id)
         {
-            var story = await _storyService.GetStoryById(Id);
+            var story = await _storyService.GetStoryByIdAsync(Id);
             if (story == null) return BadRequest("Story not found");
             return Ok(story);
         }
         [HttpPost, Authorize]
-        public async Task<IActionResult> PostStory(PostStoryDto postStoryDto)
+        public async Task<IActionResult> PostStoryAsync(PostStoryDto postStoryDto)
         {
-            var newStory = await _storyService.PostStory(postStoryDto);
+            var newStory = await _storyService.PostStoryAsync(postStoryDto);
             if (newStory == null) return BadRequest("Cant post story");
-            return CreatedAtAction(nameof(PostStory), newStory);
+            return CreatedAtAction(nameof(PostStoryAsync), newStory);
         }
 
         [HttpPatch("{Id}"), Authorize]
-        public async Task<IActionResult> UpdateStory(int Id, UpdateStoryDto updateStoryDto)
+        public async Task<IActionResult> UpdateStoryAsync(int Id, UpdateStoryDto updateStoryDto)
         {
-            var story = await _storyService.UpdateStory(Id, updateStoryDto);
+            var story = await _storyService.UpdateStoryAsync(Id, updateStoryDto);
             if (story == null) return BadRequest("Story not found");
             return Ok(story);
         }
         [HttpDelete("{Id}"), Authorize]
-        public async Task<IActionResult> DeleteStory(int Id)
+        public async Task<IActionResult> DeleteStoryAsync(int Id)
         {
-            var deleted = await _storyService.DeleteStory(Id);
+            var deleted = await _storyService.DeleteStoryAsync(Id);
             if (!deleted) return BadRequest("Story not found");
             return NoContent();
         }
         [HttpGet("search/{pattern}")]
-        public async Task<ActionResult<IEnumerable<Story>>> GetSearchedStories([FromQuery] PaginationFilter filter, string pattern)
+        public async Task<ActionResult<IEnumerable<Story>>> GetSearchedStoriesAsync([FromQuery] PaginationFilter filter, string pattern)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var pagedData = await _storyService.GetSearchedStories(validFilter.PageNumber, validFilter.PageSize, pattern);
-            var totalRecords = await _storyService.CountSearchedStories(pattern);
+            var pagedData = await _storyService.GetSearchedStoriesAsync(validFilter.PageNumber, validFilter.PageSize, pattern);
+            var totalRecords = await _storyService.CountSearchedStoriesAsync(pattern);
             var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
 
         }
         [HttpGet("users/{username}")]
-        public async Task<ActionResult<IEnumerable<Story>>> GetStoriesOfAUser(string username)
+        public async Task<ActionResult<IEnumerable<Story>>> GetStoriesOfAUserAsync([FromQuery] PaginationFilter filter, string username)
         {
-            var stories = await _storyService.GetStoriesOfAUser(username);
-            return Ok(stories);
+            var route = Request.Path.Value;
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _storyService.GetStoriesOfAUserAsync(validFilter.PageNumber, validFilter.PageSize, username);
+            var totalRecords = await _storyService.CountStoriesOfAUserAsync(username);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords, _uriService, route);
+            return Ok(pagedReponse);
         }
     }
 }

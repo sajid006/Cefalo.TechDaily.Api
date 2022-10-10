@@ -23,6 +23,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.TechDaily.Repository
 		{76B80D7A-CE41-4143-A56E-90041D326A79} = {76B80D7A-CE41-4143-A56E-90041D326A79}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.TechDaily.Service.UnitTests", "Cefalo.TechDaily.Service.UnitTests\Cefalo.TechDaily.Service.UnitTests.csproj", "{5C36BCC0-3123-40DF-BC88-47C861BC1C70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76B80D7A-CE41-4143-A56E-90041D326A79} = {76B80D7A-CE41-4143-A56E-90041D326A79}
+		{7C27EADD-149C-4B81-B2AF-6745F8853FD4} = {7C27EADD-149C-4B81-B2AF-6745F8853FD4}
+		{7D7FA180-AA42-4776-9DDF-B22AE90A40CB} = {7D7FA180-AA42-4776-9DDF-B22AE90A40CB}
+		{8DC86013-4EAD-41F9-8699-D60A416668D0} = {8DC86013-4EAD-41F9-8699-D60A416668D0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +53,10 @@ Global
 		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DC86013-4EAD-41F9-8699-D60A416668D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C36BCC0-3123-40DF-BC88-47C861BC1C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C36BCC0-3123-40DF-BC88-47C861BC1C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C36BCC0-3123-40DF-BC88-47C861BC1C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C36BCC0-3123-40DF-BC88-47C861BC1C70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

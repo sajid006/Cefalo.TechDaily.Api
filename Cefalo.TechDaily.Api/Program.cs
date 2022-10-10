@@ -10,7 +10,6 @@ using Cefalo.TechDaily.Service.Contracts;
 using Cefalo.TechDaily.Service.Services;
 using Cefalo.TechDaily.Repository.Contracts;
 using Cefalo.TechDaily.Repository.Repositories;
-using Cefalo.TechDaily.Service.Utils.Contract;
 using Cefalo.TechDaily.Service.Utils.Services;
 using Cefalo.TechDaily.Service.Utils.Contracts;
 using Cefalo.TechDaily.Api.GlobalExceptionHandler;
@@ -120,7 +119,7 @@ builder.Services.AddScoped<IStoryService, StoryService>();
 
 builder.Services.AddScoped<IPasswordHandler, PasswordHandler>();
 builder.Services.AddScoped<IJwtTokenHandler, JwtTokenHandler>();
-builder.Services.AddScoped<ICookieHandler, CookieHandler>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

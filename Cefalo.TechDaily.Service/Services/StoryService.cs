@@ -31,20 +31,20 @@ namespace Cefalo.TechDaily.Service.Services
             _updateStoryDtoValidator = updateStoryDtoValidator;
         }   
 
-        public async Task<List<Story>> GetStories(int pageNumber,int pageSize)
+        public async Task<List<Story>> GetStoriesAsync(int pageNumber,int pageSize)
         {
-            var stories = await _storyRepository.GetStories(pageNumber,pageSize);
+            var stories = await _storyRepository.GetStoriesAsync(pageNumber,pageSize);
             return stories;
         }
 
-        public async Task<Story> GetStoryById(int Id)
+        public async Task<Story> GetStoryByIdAsync(int Id)
         {
-            var story =  await _storyRepository.GetStoryById(Id);
+            var story =  await _storyRepository.GetStoriesAsync(Id);
             if (story == null) throw new NotFoundException("Story not found");
             return story;
         }
 
-        public async Task<Story> PostStory(PostStoryDto postStoryDto)
+        public async Task<Story> PostStoryAsync(PostStoryDto postStoryDto)
         {
             _postStoryDtoValidator.ValidateDTO(postStoryDto);
             var loggedInUser = _jwtTokenHandler.GetLoggedinUsername();
@@ -52,49 +52,53 @@ namespace Cefalo.TechDaily.Service.Services
                 Story story = _mapper.Map<Story>(postStoryDto);
             story.CreatedAt = DateTime.UtcNow;
             story.UpdatedAt = DateTime.UtcNow;
-            var newStory = await _storyRepository.PostStory(story);
+            var newStory = await _storyRepository.PostStoryAsync(story);
             return newStory;
         }
 
-        public async Task<Story> UpdateStory(int Id, UpdateStoryDto updateStoryDto)
+        public async Task<Story> UpdateStoryAsync(int Id, UpdateStoryDto updateStoryDto)
         {
             _updateStoryDtoValidator.ValidateDTO(updateStoryDto);
             var loggedInUser = _jwtTokenHandler.GetLoggedinUsername();
             Boolean auth = await CheckAuthor(loggedInUser, Id);
             if (!auth) throw new UnauthorizedException("You are not authorized to update this story");
             Story story = _mapper.Map<Story>(updateStoryDto);
-            var updatedStory = await _storyRepository.UpdateStory(Id, story);
+            var updatedStory = await _storyRepository.UpdateStoryAsync(Id, story);
             return updatedStory;
         }
-        public async Task<bool> DeleteStory(int Id)
+        public async Task<bool> DeleteStoryAsync(int Id)
         {
             var loggedInUser = _jwtTokenHandler.GetLoggedinUsername();
             Boolean auth = await CheckAuthor(loggedInUser, Id);
             if (!auth) throw new UnauthorizedException("You are not authorized to delete this story");
-            return await _storyRepository.DeleteStory(Id);
+            return await _storyRepository.DeleteStoryAsync(Id);
         }
-        public async Task<List<Story>> GetSearchedStories(int pageNumber, int pageSize, string pattern)
+        public async Task<List<Story>> GetSearchedStoriesAsync(int pageNumber, int pageSize, string pattern)
         {
-            var stories = await _storyRepository.GetSearchedStories(pageNumber, pageSize, pattern);
+            var stories = await _storyRepository.GetSearchedStoriesAsync(pageNumber, pageSize, pattern);
             return stories.ToList();
         }
-        public async Task<List<Story>> GetStoriesOfAUser(string username)
+        public async Task<List<Story>> GetStoriesOfAUserAsync(int pageNumber, int pageSize, string username)
         {
-            var stories = await _storyRepository.GetStoriesOfAUser(username);
+            var stories = await _storyRepository.GetStoriesOfAUserAsync(pageNumber, pageSize, username);
             return stories.ToList();
         }
-        public async Task<int> CountStories()
+        public async Task<int> CountStoriesAsync()
         {
-            return await _storyRepository.CountStories();
+            return await _storyRepository.CountStoriesAsync();
         }
-        public async Task<int> CountSearchedStories(string pattern)
+        public async Task<int> CountSearchedStoriesAsync(string pattern)
         {
-            return await _storyRepository.CountSearchedStories(pattern);
+            return await _storyRepository.CountSearchedStoriesAsync(pattern);
+        }
+        public async Task<int> CountStoriesOfAUserAsync(string username)
+        {
+            return await _storyRepository.CountStoriesOfAUserAsync(username);
         }
         private async Task<Boolean> CheckAuthor(string loggedInUser, int Id)
         {
             if (loggedInUser == null) return false;
-            var curstory = await GetStoryById(Id);
+            var curstory = await GetStoryByIdAsync(Id);
             if (curstory == null) return false;
             var authorName = ((Story)curstory).AuthorName;
             if (authorName != loggedInUser) return false;

@@ -10,15 +10,16 @@ namespace Cefalo.TechDaily.Service.Contracts
 {
     public interface IStoryService
     {
-        Task<List<Story>> GetStories(int pageNumber,int pageSize);
-        Task<Story> GetStoryById(int Id);
-        Task<Story> PostStory(PostStoryDto postStoryDto);
-        Task<Story> UpdateStory(int Id, UpdateStoryDto updateStoryDto);
-        Task<Boolean> DeleteStory(int Id);
-        Task<List<Story>> GetSearchedStories(int pageNumber, int pageSize, string pattern);
-        Task<List<Story>> GetStoriesOfAUser(string username);
-        Task<int> CountStories();
-        Task<int> CountSearchedStories(string pattern);
+        Task<List<Story>> GetStoriesAsync(int pageNumber,int pageSize);
+        Task<Story> GetStoryByIdAsync(int Id);
+        Task<Story> PostStoryAsync(PostStoryDto postStoryDto);
+        Task<Story> UpdateStoryAsync(int Id, UpdateStoryDto updateStoryDto);
+        Task<Boolean> DeleteStoryAsync(int Id);
+        Task<List<Story>> GetSearchedStoriesAsync(int pageNumber, int pageSize, string pattern);
+        Task<List<Story>> GetStoriesOfAUserAsync(int pageNumber, int pageSize, string username);
+        Task<int> CountStoriesAsync();
+        Task<int> CountSearchedStoriesAsync(string pattern);
+        Task<int> CountStoriesOfAUserAsync(string username);
 
     }
 }

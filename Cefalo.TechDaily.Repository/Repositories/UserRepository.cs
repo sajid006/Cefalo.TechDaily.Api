@@ -17,22 +17,22 @@ namespace Cefalo.TechDaily.Repository.Repositories
         {
             _context = context;
         }
-        public async Task<List<User>> GetUsers()
+        public async Task<List<User>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
-        public async Task<User?> GetUserByUsername(string Username)
+        public async Task<User?> GetUserByUsernameAsync(string Username)
         {
             var userByName =  await _context.Users.FindAsync(Username);
             return userByName;
         }
-        public async Task<User?> PostUser(User user)
+        public async Task<User?> PostUserAsync(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;
         }
-        public async Task<User?> UpdateUser(string Username, User user)
+        public async Task<User?> UpdateUserAsync(string Username, User user)
         {
             var myUser = await _context.Users.FindAsync(Username);
             myUser.Email = user.Email;
@@ -47,7 +47,7 @@ namespace Cefalo.TechDaily.Repository.Repositories
             await _context.SaveChangesAsync();
             return myUser;
         }
-        public async Task<Boolean> DeleteUser(string Username)
+        public async Task<Boolean> DeleteUserAsync(string Username)
         {
             var user = await _context.Users.FindAsync(Username);
             _context.Users.Remove((User)user);
