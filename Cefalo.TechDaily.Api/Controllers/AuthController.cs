@@ -26,9 +26,6 @@ namespace Cefalo.TechDaily.Api.Controllers
             _jwtTokenHandler = jwtTokenHandler;
         }
 
-        public AuthController()
-        {
-        }
 
         [HttpPost("signup")]
         public async Task<ActionResult<UserWithToken>> SignupAsync(SignupDto request)

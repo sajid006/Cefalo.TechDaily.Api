@@ -24,7 +24,7 @@ namespace Cefalo.TechDaily.Repository.Repositories
             //return await _context.Stories.ToListAsync();
             return await _context.Stories.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
-        public async Task<Story?> GetStoriesAsync(int Id)
+        public async Task<Story?> GetStoryByIdAsync(int Id)
         {
             return await _context.Stories.FindAsync(Id);
         }
@@ -57,23 +57,24 @@ namespace Cefalo.TechDaily.Repository.Repositories
         {
             return await _context.Stories.Where(s => s.AuthorName == username).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
+        public async Task<List<Story>> GetSearchedStoriesAsync(int pageNumber, int pageSize, string pattern)
+        {
+            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
         public async Task<int> CountStoriesAsync()
         {
             return await _context.Stories.CountAsync(); 
         }
 
-        public async Task<List<Story>> GetSearchedStoriesAsync(int pageNumber, int pageSize, string pattern)
-        {
-            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-        }
-
-        public async Task<int> CountSearchedStoriesAsync(string pattern)
-        {
-            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).CountAsync();
-        }
+        
         public async Task<int> CountStoriesOfAUserAsync(string username)
         {
             return await _context.Stories.Where(s => s.AuthorName == username).CountAsync();
         }
+        public async Task<int> CountSearchedStoriesAsync(string pattern)
+        {
+            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).CountAsync();
+        }
+
     }
 }

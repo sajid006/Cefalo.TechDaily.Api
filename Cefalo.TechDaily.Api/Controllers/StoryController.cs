@@ -49,7 +49,7 @@ namespace Cefalo.TechDaily.Api.Controllers
         {
             var newStory = await _storyService.PostStoryAsync(postStoryDto);
             if (newStory == null) return BadRequest("Cant post story");
-            return CreatedAtAction(nameof(PostStoryAsync), newStory);
+            return Ok(newStory);
         }
 
         [HttpPatch("{Id}"), Authorize]

@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UserServiceUnitTests\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Cefalo.TechDaily.Database\Cefalo.TechDaily.Database.csproj" />
     <ProjectReference Include="..\Cefalo.TechDaily.Repository\Cefalo.TechDaily.Repository.csproj" />
     <ProjectReference Include="..\Cefalo.TechDaily.Service\Cefalo.TechDaily.Service.csproj" />

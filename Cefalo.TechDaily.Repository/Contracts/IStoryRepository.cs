@@ -10,7 +10,7 @@ namespace Cefalo.TechDaily.Repository.Contracts
     public interface IStoryRepository
     {
         Task<List<Story>> GetStoriesAsync(int pageNumber,int pageSize);
-        Task<Story?> GetStoriesAsync(int Id);
+        Task<Story?> GetStoryByIdAsync(int Id);
         Task<Story?> PostStoryAsync(Story story);
         Task<Story?> UpdateStoryAsync(int Id, Story story);
         Task<Boolean> DeleteStoryAsync(int Id);

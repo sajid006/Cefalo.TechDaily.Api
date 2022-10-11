@@ -39,7 +39,7 @@ namespace Cefalo.TechDaily.Service.Services
 
         public async Task<Story> GetStoryByIdAsync(int Id)
         {
-            var story =  await _storyRepository.GetStoriesAsync(Id);
+            var story =  await _storyRepository.GetStoryByIdAsync(Id);
             if (story == null) throw new NotFoundException("Story not found");
             return story;
         }
@@ -49,7 +49,7 @@ namespace Cefalo.TechDaily.Service.Services
             _postStoryDtoValidator.ValidateDTO(postStoryDto);
             var loggedInUser = _jwtTokenHandler.GetLoggedinUsername();
             if (loggedInUser != postStoryDto.AuthorName) throw new UnauthorizedException("You are not logged in");
-                Story story = _mapper.Map<Story>(postStoryDto);
+            Story story = _mapper.Map<Story>(postStoryDto);
             story.CreatedAt = DateTime.UtcNow;
             story.UpdatedAt = DateTime.UtcNow;
             var newStory = await _storyRepository.PostStoryAsync(story);
@@ -98,7 +98,7 @@ namespace Cefalo.TechDaily.Service.Services
         private async Task<Boolean> CheckAuthor(string loggedInUser, int Id)
         {
             if (loggedInUser == null) return false;
-            var curstory = await GetStoryByIdAsync(Id);
+            var curstory = await _storyRepository.GetStoryByIdAsync(Id);
             if (curstory == null) return false;
             var authorName = ((Story)curstory).AuthorName;
             if (authorName != loggedInUser) return false;
