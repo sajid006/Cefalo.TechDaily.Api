@@ -59,7 +59,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.StoryServiceUnitTe
             myStory.Should().NotBeNull();
             myStory.Should().BeEquivalentTo(fakeStory);
         }
-
         [Fact]
         public async void GetStoryByIdAsync_WithInvalidParameter_ReturnsError()
         {

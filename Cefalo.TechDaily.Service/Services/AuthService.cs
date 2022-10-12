@@ -30,9 +30,8 @@ namespace Cefalo.TechDaily.Service.Services
         private readonly IJwtTokenHandler _jwtTokenHandler;
         private readonly BaseDtoValidator<LoginDto> _loginDtoValidator;
         private readonly BaseDtoValidator<SignupDto> _signupDtoValidator;
-        private readonly BaseDtoValidator<UserWithToken> _userWithTokenValidator;
 
-        public AuthService(IUserRepository userRepository, IMapper mapper, IPasswordHandler passwordHandler, IJwtTokenHandler jwtTokenHandler, BaseDtoValidator<LoginDto> loginDtoValidator, BaseDtoValidator<SignupDto> signupDtoValidator, BaseDtoValidator<UserWithToken> userWithTokenValidator)
+        public AuthService(IUserRepository userRepository, IMapper mapper, IPasswordHandler passwordHandler, IJwtTokenHandler jwtTokenHandler, BaseDtoValidator<LoginDto> loginDtoValidator, BaseDtoValidator<SignupDto> signupDtoValidator)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -40,12 +39,13 @@ namespace Cefalo.TechDaily.Service.Services
             _jwtTokenHandler = jwtTokenHandler;
             _loginDtoValidator = loginDtoValidator;
             _signupDtoValidator = signupDtoValidator;
-            _userWithTokenValidator = userWithTokenValidator;
         }
         public async Task<UserWithToken> SignupAsync(SignupDto request)
         {
             _signupDtoValidator.ValidateDTO(request);
-            _passwordHandler.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            Tuple<byte[], byte[]> passwordObject = _passwordHandler.CreatePasswordHash(request.Password);
+            byte[] passwordSalt = passwordObject.Item1;
+            byte[] passwordHash = passwordObject.Item2;
             var user = _mapper.Map<User>(request);
             user.UpdatedAt = DateTime.UtcNow;
             user.CreatedAt = DateTime.UtcNow;
@@ -55,7 +55,6 @@ namespace Cefalo.TechDaily.Service.Services
             var newUser = await _userRepository.PostUserAsync(user);
             var userWithToken = _mapper.Map<UserWithToken>(newUser);
             userWithToken.Token = _jwtTokenHandler.CreateToken(newUser);
-            _userWithTokenValidator.ValidateDTO(userWithToken);
             return userWithToken;
         }
         public async Task<UserWithToken> LoginAsync(LoginDto request)
@@ -67,7 +66,6 @@ namespace Cefalo.TechDaily.Service.Services
             if (!isPasswordCorrect) throw new BadRequestException("Invalid username or password");
             var userWithToken = _mapper.Map<UserWithToken>(user);
             userWithToken.Token = _jwtTokenHandler.CreateToken(user);
-            _userWithTokenValidator.ValidateDTO(userWithToken);
             
             return userWithToken;
         }

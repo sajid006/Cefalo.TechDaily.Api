@@ -9,6 +9,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.Fixtures
     
     public class FakeStory
     {
+        /*
         public int Id;
         public string Title;
         public string AuthorName;
@@ -26,6 +27,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.Fixtures
             Description = "Description";
         }
         //fakeStory = A.Fake<Story>(x => x.WithArgumentsForConstructor(() => new Story()));
-        
+        */
     }
 }

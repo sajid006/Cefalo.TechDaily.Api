@@ -105,8 +105,6 @@ builder.Services.AddScoped<BaseDtoValidator<PostStoryDto>, PostStoryDtoValidator
 builder.Services.AddScoped<BaseDtoValidator<SignupDto>, SignupDtoValidator>();
 builder.Services.AddScoped<BaseDtoValidator<UpdateStoryDto>, UpdateStoryDtoValidator>();
 builder.Services.AddScoped<BaseDtoValidator<UpdateUserDto>, UpdateUserDtoValidator>();
-builder.Services.AddScoped<BaseDtoValidator<UserDto>, UserDtoValidator>();
-builder.Services.AddScoped<BaseDtoValidator<UserWithToken>, UserWithTokenValidator>();
 
 //Interfaces
 builder.Services.AddScoped<IUserRepository, UserRepository>();

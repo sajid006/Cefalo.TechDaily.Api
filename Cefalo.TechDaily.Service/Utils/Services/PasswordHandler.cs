@@ -10,13 +10,15 @@ namespace Cefalo.TechDaily.Service.Utils.Services
 {
     public class PasswordHandler : IPasswordHandler
     {
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public Tuple<byte[], byte[]> CreatePasswordHash(string password)
         {
+            byte[] passwordSalt, passwordHash;
             using (var hmac = new HMACSHA512())
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
+            return new Tuple<byte[], byte[]>(passwordSalt, passwordHash);
         }
 
         public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)

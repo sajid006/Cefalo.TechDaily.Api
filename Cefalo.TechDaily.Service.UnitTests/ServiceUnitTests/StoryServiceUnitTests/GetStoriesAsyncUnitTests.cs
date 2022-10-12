@@ -45,7 +45,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.StoryServiceUnitTe
             A.CallTo(() => fakeStoryRepository.GetStoriesAsync(fakePageNumber, fakePageSize)).Returns(fakeStoryData.fakeStoryList);
         }
         [Fact]
-        public async void GetStoryByIdAsync_WithValidParameter_GetStoriesAsyncIsCalledOnce()
+        public async void GetStoriesAsync_WithValidParameter_GetStoriesAsyncIsCalledOnce()
         {
             //Arrange
             ArrangeValidParameters();
@@ -55,7 +55,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.StoryServiceUnitTe
             A.CallTo(() => fakeStoryRepository.GetStoriesAsync(fakePageNumber, fakePageSize)).MustHaveHappenedOnceExactly();
         }
         [Fact]
-        public async void GetStoryByIdAsync_WithValidParameter_ReturnedStoryListIsValid()
+        public async void GetStoriesAsync_WithValidParameter_ReturnedStoryListIsValid()
         {
             //Arrange
             ArrangeValidParameters();
