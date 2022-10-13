@@ -30,7 +30,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
         private readonly FakeUserData fakeUserData;
         private readonly User fakeUser,fakeUser2;
         private readonly UserDto fakeUserDto, fakeUserDto2;
-        private readonly UserWithToken fakeUserWithToken;
         private readonly List<User> fakeUserList;
         private readonly List<UserDto> fakeUserDtoList;
         public GetUsersAsyncUnitTests()
@@ -48,7 +47,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
             fakeUser2 = fakeUserData.fakeUser2;
             fakeUserDto = fakeUserData.fakeUserDto;
             fakeUserDto2 = fakeUserData.fakeUserDto2;
-            fakeUserWithToken = fakeUserData.fakeUserWithToken;
             fakeUserList = fakeUserData.fakeUserList;
             fakeUserDtoList = fakeUserData.fakeUserDtoList;
         }

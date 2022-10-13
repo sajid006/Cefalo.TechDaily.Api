@@ -76,7 +76,7 @@ namespace Cefalo.TechDaily.Service.Services
             var tokenCreationTimeString = _jwtTokenHandler.GetTokenCreationTime();
             if (tokenCreationTimeString == null) throw new UnauthorizedException("Please login again");
             DateTime tokenCreationTime = Convert.ToDateTime(tokenCreationTimeString); 
-            if(DateTime.Compare(tokenCreationTime,currentUser.PasswordModifiedAt)<0) throw new UnauthorizedException("Please login again");
+            if(DateTime.Compare(tokenCreationTime,currentUser.PasswordModifiedAt)<0) throw new UnauthorizedException("Please Login Again");
             User user = _mapper.Map<User>(updateUserDto);
             if (updateUserDto.Password != null && updateUserDto.Password != "")
             {

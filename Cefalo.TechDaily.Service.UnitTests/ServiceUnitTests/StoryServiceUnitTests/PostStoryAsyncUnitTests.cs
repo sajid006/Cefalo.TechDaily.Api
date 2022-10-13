@@ -106,7 +106,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.StoryServiceUnitTe
         {
 
             //Arrange
-            //ArrangeValidParameters();
             var errMessage = "Invalid Title, Description or AuthorName";
             A.CallTo(() => fakePostStoryDtoValidator.ValidateDTO(fakePostStoryDto)).Throws(new BadRequestException(errMessage));
             //Act

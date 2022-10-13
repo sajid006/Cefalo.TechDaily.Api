@@ -18,21 +18,18 @@ namespace Cefalo.TechDaily.Api.Controllers
     public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
-        private readonly IUriService _uriService;
-        public StoryController(IStoryService storyService, IUriService uriService)
+        public StoryController(IStoryService storyService)
         {
             _storyService = storyService;
-            _uriService = uriService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Story>>> GetStoriesAsync([FromQuery] PaginationFilter filter)
         {
-            var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var pagedData = await _storyService.GetStoriesAsync(validFilter.PageNumber,validFilter.PageSize);
             var totalRecords = await _storyService.CountStoriesAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords);
             return Ok(pagedReponse);
             //return Ok(await _storyService.GetStories(1, 1));
         }
@@ -69,22 +66,20 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpGet("search/{pattern}")]
         public async Task<ActionResult<IEnumerable<Story>>> GetSearchedStoriesAsync([FromQuery] PaginationFilter filter, string pattern)
         {
-            var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var pagedData = await _storyService.GetSearchedStoriesAsync(validFilter.PageNumber, validFilter.PageSize, pattern);
             var totalRecords = await _storyService.CountSearchedStoriesAsync(pattern);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords);
             return Ok(pagedReponse);
 
         }
         [HttpGet("users/{username}")]
         public async Task<ActionResult<IEnumerable<Story>>> GetStoriesOfAUserAsync([FromQuery] PaginationFilter filter, string username)
         {
-            var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var pagedData = await _storyService.GetStoriesOfAUserAsync(validFilter.PageNumber, validFilter.PageSize, username);
             var totalRecords = await _storyService.CountStoriesOfAUserAsync(username);
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Story>(pagedData, validFilter, totalRecords);
             return Ok(pagedReponse);
         }
     }

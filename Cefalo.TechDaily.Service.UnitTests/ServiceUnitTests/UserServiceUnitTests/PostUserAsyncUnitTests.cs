@@ -29,11 +29,9 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
         private readonly BaseDtoValidator<SignupDto> fakeSignupDtoValidator;
         private readonly BaseDtoValidator<UpdateUserDto> fakeUpdateUserDtoValidator;
         private readonly FakeUserData fakeUserData;
-        private readonly User fakeUser, fakeUser2;
-        private readonly UserDto fakeUserDto, fakeUserDto2;
+        private readonly User fakeUser;
         private readonly UserWithToken fakeUserWithToken;
-        private readonly List<User> fakeUserList;
-        private readonly List<UserDto> fakeUserDtoList;
+
         public readonly SignupDto fakeSignupDto;
         public PostUserAsyncUnitTests()
         {
@@ -47,12 +45,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
             fakeUserService = new UserService(fakeUserRepository, fakeMapper, fakePasswordHandler, fakeJwtTokenHandler, fakeSignupDtoValidator, fakeUpdateUserDtoValidator);
             fakeUserData = A.Fake<FakeUserData>();
             fakeUser = fakeUserData.fakeUser;
-            fakeUser2 = fakeUserData.fakeUser2;
-            fakeUserDto = fakeUserData.fakeUserDto;
-            fakeUserDto2 = fakeUserData.fakeUserDto2;
             fakeUserWithToken = fakeUserData.fakeUserWithToken;
-            fakeUserList = fakeUserData.fakeUserList;
-            fakeUserDtoList = fakeUserData.fakeUserDtoList;
             fakeSignupDto = fakeUserData.fakeSignupDto;
         }
         private void ArrangeValidParameters()
@@ -65,7 +58,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
             A.CallTo(() => fakeJwtTokenHandler.CreateToken(fakeUser)).Returns(fakeUserWithToken.Token);
         }
         [Fact]
-        public async void PostUserAsync_WithValidParameter_ValidateDTOOfSignupDtoValidatorIsCalledOnce()
+        public async void PostUserAsync_WithValidParameter_ValidateDTOIsCalledOnce()
         {
             //Arrange
             ArrangeValidParameters();
@@ -125,16 +118,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
             A.CallTo(() => fakeJwtTokenHandler.CreateToken(fakeUser)).MustHaveHappenedOnceExactly();
         }
         [Fact]
-        public async void PostUserAsync_WithValidParameter_ValidateDTOOfUserWithTokenValidatorIsCalledOnce()
-        {
-            //Arrange
-            ArrangeValidParameters();
-            //Act
-            var createdUser = await fakeUserService.PostUserAsync(fakeSignupDto);
-            //Assert
-            A.CallTo(() => fakeUserWithTokenValidator.ValidateDTO(fakeUserWithToken)).MustHaveHappenedOnceExactly();
-        }
-        [Fact]
         public async void PostUserAsync_WithValidParameter_ReturnsCreatedUserCorrectly()
         {
             //Arrange
@@ -150,7 +133,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
         {
             //Arrange
             ArrangeValidParameters();
-            var errMessage = "Invalid input";
+            var errMessage = "Invalid user input";
             A.CallTo(() => fakeSignupDtoValidator.ValidateDTO(fakeSignupDto)).Throws(new BadRequestException(errMessage));
             //Act
             var ex = await Record.ExceptionAsync(async () => await fakeUserService.PostUserAsync(fakeSignupDto));

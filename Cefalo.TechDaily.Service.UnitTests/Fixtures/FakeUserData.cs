@@ -1,6 +1,5 @@
 ﻿using Cefalo.TechDaily.Database.Models;
 using Cefalo.TechDaily.Service.Dto;
-using Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.Fixtures;
 using FakeItEasy;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,10 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
         public List<User> fakeUserList;
         public List<UserDto> fakeUserDtoList;
         public SignupDto fakeSignupDto;
+        public LoginDto fakeLoginDto;
+        public UpdateUserDto fakeUpdateUserDto;
+        public UpdateUserDto fakeUpdateUserDto2;
+        public UpdateUserDto fakeUpdateUserDto3;
         public FakeUserData()
         {
             fakeUser = A.Fake<User>(x => x.WithArgumentsForConstructor(() => new User()));
@@ -73,13 +76,32 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
             fakeUserWithToken.UpdatedAt = DateTime.Now;
             fakeUserWithToken.CreatedAt = DateTime.Now;
             fakeUserWithToken.PasswordModifiedAt = DateTime.Now;
-            fakeUserWithToken.Token = "1234";
+            fakeUserWithToken.Token = "ABCD";
 
             fakeSignupDto = A.Fake<SignupDto>(x => x.WithArgumentsForConstructor(() => new SignupDto()));
             fakeSignupDto.Username = "sajid1";
             fakeSignupDto.Email = "sajid1@gmail.com";
             fakeSignupDto.Name = "Sajid Hasan";
-            fakeSignupDto.Password = "1234";
+            fakeSignupDto.Password = "12345678";
+
+            fakeLoginDto = A.Fake<LoginDto>(x => x.WithArgumentsForConstructor(() => new LoginDto()));
+            fakeLoginDto.Username = "sajid1";
+            fakeLoginDto.Password = "12345678";
+
+            fakeUpdateUserDto = A.Fake<UpdateUserDto>(x => x.WithArgumentsForConstructor(() => new UpdateUserDto()));
+            fakeUpdateUserDto.Email = "sajid1@gmail.com";
+            fakeUpdateUserDto.Name = "Sajid Hasan";
+            fakeUpdateUserDto.Password = "12345678";
+
+            fakeUpdateUserDto2 = A.Fake<UpdateUserDto>(x => x.WithArgumentsForConstructor(() => new UpdateUserDto()));
+            fakeUpdateUserDto2.Email = "sajid1@gmail.com";
+            fakeUpdateUserDto2.Name = "Sajid Hasan";
+            fakeUpdateUserDto2.Password = "1234";
+
+            fakeUpdateUserDto3 = A.Fake<UpdateUserDto>(x => x.WithArgumentsForConstructor(() => new UpdateUserDto()));
+            fakeUpdateUserDto3.Email = "sajid1@gmail.com";
+            fakeUpdateUserDto3.Name = "Sajid Hasan";
+            fakeUpdateUserDto3.Password = "";
         }
     }
 }

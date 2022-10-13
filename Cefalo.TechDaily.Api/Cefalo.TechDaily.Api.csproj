@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pagination\**" />
+    <Content Remove="Pagination\**" />
+    <EmbeddedResource Remove="Pagination\**" />
+    <None Remove="Pagination\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
@@ -23,11 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Cefalo.TechDaily.Database\Cefalo.TechDaily.Database.csproj" />
     <ProjectReference Include="..\Cefalo.TechDaily.Service\Cefalo.TechDaily.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pagination\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

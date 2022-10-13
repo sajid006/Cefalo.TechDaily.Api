@@ -27,11 +27,7 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
         private readonly BaseDtoValidator<SignupDto> fakeSignupDtoValidator;
         private readonly BaseDtoValidator<UpdateUserDto> fakeUpdateUserDtoValidator;
         private readonly FakeUserData fakeUserData;
-        private readonly User fakeUser, fakeUser2;
-        private readonly UserDto fakeUserDto, fakeUserDto2;
-        private readonly UserWithToken fakeUserWithToken;
-        private readonly List<User> fakeUserList;
-        private readonly List<UserDto> fakeUserDtoList;
+        private readonly User fakeUser;
         public DeleteUserAsyncUnitTests()
         {
 
@@ -44,12 +40,6 @@ namespace Cefalo.TechDaily.Service.UnitTests.ServiceUnitTests.UserServiceUnitTes
             fakeUserService = new UserService(fakeUserRepository, fakeMapper, fakePasswordHandler, fakeJwtTokenHandler, fakeSignupDtoValidator, fakeUpdateUserDtoValidator);
             fakeUserData = A.Fake<FakeUserData>();
             fakeUser = fakeUserData.fakeUser;
-            fakeUser2 = fakeUserData.fakeUser2;
-            fakeUserDto = fakeUserData.fakeUserDto;
-            fakeUserDto2 = fakeUserData.fakeUserDto2;
-            fakeUserWithToken = fakeUserData.fakeUserWithToken;
-            fakeUserList = fakeUserData.fakeUserList;
-            fakeUserDtoList = fakeUserData.fakeUserDtoList;
         }
         private void ArrangeValidParameters()
         {
