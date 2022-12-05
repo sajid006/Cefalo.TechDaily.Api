@@ -21,6 +21,8 @@ using Cefalo.TechDaily.Api.CustomOutputFormatter.UserOutputFormatter;
 using System;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
+using HealthChecks.UI.Client;
 
 //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -136,12 +138,13 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
     {
         AllowCachingResponses = false,
-        ResponseWriter = HealthCheckResponseWriter
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
     endpoints.MapHealthChecksUI(options =>
     {
         options.UIPath = "/healthchecks-ui";
         options.ApiPath = "/health-ui-api";
+        
     });
     endpoints.MapRazorPages();
 
@@ -164,7 +167,7 @@ Task HealthCheckResponseWriter(HttpContext context, HealthReport report)
                     ))
                 ))
         ));
-    return context.Response.WriteAsync(obj.ToString(Newtonsoft.Json.Formatting.Indented));
+    return context.Response.WriteAsync(Newtonsoft.Json.JsonConvert.SerializeObject(obj));
 }
 app.MapControllers();
 
