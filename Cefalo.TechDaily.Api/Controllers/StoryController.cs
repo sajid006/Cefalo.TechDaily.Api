@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cefalo.TechDaily.Api.Helpers;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
+using Microsoft.Extensions.Http;
 
 namespace Cefalo.TechDaily.Api.Controllers
 {
@@ -46,21 +47,21 @@ namespace Cefalo.TechDaily.Api.Controllers
         {
             var newStory = await _storyService.PostStoryAsync(postStoryDto);
             if (newStory == null) return BadRequest("Cant post story");
-            return Ok(newStory);
+            return Created(nameof(PostStoryAsync), newStory);
         }
 
         [HttpPatch("{Id}"), Authorize]
         public async Task<IActionResult> UpdateStoryAsync(int Id, UpdateStoryDto updateStoryDto)
         {
             var story = await _storyService.UpdateStoryAsync(Id, updateStoryDto);
-            if (story == null) return BadRequest("Story not found");
+            if (story == null) return BadRequest("Can't update story");
             return Ok(story);
         }
         [HttpDelete("{Id}"), Authorize]
         public async Task<IActionResult> DeleteStoryAsync(int Id)
         {
             var deleted = await _storyService.DeleteStoryAsync(Id);
-            if (!deleted) return BadRequest("Story not found");
+            if (!deleted) return BadRequest("Can't delete story");
             return NoContent();
         }
         [HttpGet("search/{pattern}")]

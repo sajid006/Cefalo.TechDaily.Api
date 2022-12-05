@@ -28,33 +28,34 @@ namespace Cefalo.TechDaily.Api.Controllers
 
 
         [HttpPost("signup")]
-        public async Task<ActionResult<UserWithToken>> SignupAsync(SignupDto request)
+        public async Task<IActionResult> SignupAsync(SignupDto request)
         {
             var userWithToken = await _authService.SignupAsync(request);
-            return CreatedAtAction(nameof(SignupAsync), userWithToken);
+            if (userWithToken == null) return BadRequest("Can't create user");
+            return Created(nameof(SignupAsync), userWithToken);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserWithToken>> LoginAsync(LoginDto request)
+        public async Task<IActionResult> LoginAsync(LoginDto request)
         {
             var userWithToken = await _authService.LoginAsync(request);
-            //_cookieHandler.Set("user", userWithToken.Token,100000);
+            if (userWithToken == null) return BadRequest("Failed To Login");
             return Ok(userWithToken);
         }
         [HttpPost("verifytoken")]
-        public async Task<ActionResult<string?>> VerifyAsync()
+        public async Task<IActionResult> VerifyAsync()
         {
             var loggedInUser = await _authService.GetCurrentUserAsync();
-            if (loggedInUser == null) return null;
-            return loggedInUser.ToString();
+            return Ok(loggedInUser);
         }
+        /*
         [HttpGet("logout")]
         public async Task<ActionResult> LogoutAsync()
         {
             _authService.LogoutAsync();
             return Ok();
         }
-        
+        */
 
     }
 }

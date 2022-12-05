@@ -7,13 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
+namespace Cefalo.TechDaily.Repository.UnitTests.FakeData
 {
-
     public class FakeStoryData
     {
-        public Story fakeStory;
-        public Story fakeStory2;
+        public Story fakeStory,fakeStory2,fakeStory3,fakeStory4;
         public List<Story> fakeStoryList;
         public PostStoryDto fakePostStoryDto;
         public UpdateStoryDto fakeUpdateStoryDto;
@@ -35,7 +33,23 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
             fakeStory2.CreatedAt = DateTime.UtcNow;
             fakeStory2.Description = "Description";
 
-            fakeStoryList = new List<Story> { fakeStory };
+            fakeStory3 = A.Fake<Story>(x => x.WithArgumentsForConstructor(() => new Story()));
+            fakeStory3.Id = 3;
+            fakeStory3.Title = "Title";
+            fakeStory3.AuthorName = "sajid3";
+            fakeStory3.UpdatedAt = DateTime.UtcNow;
+            fakeStory3.CreatedAt = DateTime.UtcNow;
+            fakeStory3.Description = "Description";
+
+            fakeStory4 = A.Fake<Story>(x => x.WithArgumentsForConstructor(() => new Story()));
+            fakeStory4.Id = 3;
+            fakeStory4.Title = "Title";
+            fakeStory4.AuthorName = "sajid3";
+            fakeStory4.UpdatedAt = DateTime.UtcNow;
+            fakeStory4.CreatedAt = DateTime.UtcNow;
+            fakeStory4.Description = "Description";
+
+            fakeStoryList = new List<Story>();
             fakeStoryList.Add(fakeStory);
             fakeStoryList.Add(fakeStory2);
 
@@ -47,6 +61,10 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
             fakeUpdateStoryDto = A.Fake<UpdateStoryDto>(x => x.WithArgumentsForConstructor(() => new UpdateStoryDto()));
             fakeUpdateStoryDto.Title = "Title";
             fakeUpdateStoryDto.Description = "Description";
+        }
+        public static DateTime TrimMilliseconds(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0, 0, dt.Kind);
         }
     }
 }

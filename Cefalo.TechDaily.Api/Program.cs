@@ -19,20 +19,18 @@ using Cefalo.TechDaily.Service.Dto;
 using Cefalo.TechDaily.Api.CustomOutputFormatter.StoryOutputFormatter;
 using Cefalo.TechDaily.Api.CustomOutputFormatter.UserOutputFormatter;
 using System;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Newtonsoft.Json.Linq;
 
 //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                      policy =>
-//                      {
-//                          policy.WithOrigins("http://localhost:3001").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-//                      });
-//});
-// Add services to the container.
-
+builder.Services.AddRazorPages();
+builder.Services.AddHealthChecks().
+    AddSqlServer("Data Source=tcp:cefalotechdailyapidbserver.database.windows.net,1433;Initial Catalog=Cefalo.TechDaily.Api_db;User Id=sajid@cefalotechdailyapidbserver;Password=sajid")
+    .AddUrlGroup(new Uri("https://localhost:7010/api/stories"));
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+builder.Services.AddHttpClient();
 builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
@@ -54,23 +52,16 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins("http://localhost:3001", "https://localhost:3001")
+        builder.WithOrigins("http://localhost:3001", "https://localhost:3001", "https://techdaily2022.netlify.app/")
         .AllowCredentials()
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
 });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<IUriService>(o =>
-{
-    var accessor = o.GetRequiredService<IHttpContextAccessor>();
-    var request = accessor.HttpContext.Request;
-    var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
-    return new UriService(uri);
-});
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -131,10 +122,50 @@ app.UseHttpsRedirection();
 
 app.UseCors();
 
+app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
 
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
+    {
+        AllowCachingResponses = false,
+        ResponseWriter = HealthCheckResponseWriter
+    });
+    endpoints.MapHealthChecksUI(options =>
+    {
+        options.UIPath = "/healthchecks-ui";
+        options.ApiPath = "/health-ui-api";
+    });
+    endpoints.MapRazorPages();
+
+});
+Task HealthCheckResponseWriter(HttpContext context, HealthReport report)
+{
+    context.Response.ContentType = "application/json";
+    JObject obj = new JObject(
+        new JProperty("Overall status", report.Status.ToString()),
+        new JProperty("Time took", report.TotalDuration.TotalSeconds.ToString("0:0:00")),
+        new JProperty("Dependency Health Checks", new JObject(
+            report.Entries.Select(item =>
+                new JProperty(item.Key,
+                new JObject(
+                    new JProperty("Status", item.Value.Status.ToString()),
+                    new JProperty("Data", item.Value.Data.ToString()),
+                    new JProperty("Exception", item.Value.Exception?.ToString()),
+                    new JProperty("Tags", item.Value.Tags.ToString()),
+                    new JProperty("Duration", item.Value.Duration.TotalSeconds.ToString("0:0:00"))
+                    ))
+                ))
+        ));
+    return context.Response.WriteAsync(obj.ToString(Newtonsoft.Json.Formatting.Indented));
+}
 app.MapControllers();
 
 app.Run();

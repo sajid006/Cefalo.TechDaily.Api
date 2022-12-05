@@ -22,7 +22,7 @@ namespace Cefalo.TechDaily.Api.Controllers
             _userService = userService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto?>>> GetusersAsync()
+        public async Task<ActionResult<IEnumerable<UserDto?>>> GetUsersAsync()
         {
             return Ok(await _userService.GetUsersAsync());
         }
@@ -37,22 +37,22 @@ namespace Cefalo.TechDaily.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostUserAsync(SignupDto request)
         {
-            var userDto = await _userService.PostUserAsync(request);
-            if (userDto == null) return BadRequest("Cant create user");
-            return CreatedAtAction(nameof(PostUserAsync),userDto);
+            var userWithToken = await _userService.PostUserAsync(request);
+            if (userWithToken == null) return BadRequest("Can't create user");
+            return Created(nameof(PostUserAsync), userWithToken);
         }
         [HttpPatch("{Username}"), Authorize]
         public async Task<IActionResult> UpdateUserAsync(string Username, UpdateUserDto updateUserDto)
         {
             var userDto = await _userService.UpdateUserAsync(Username,updateUserDto);
-            if (userDto == null) return BadRequest("User not found");
+            if (userDto == null) return BadRequest("Can't update user");
             return Ok(userDto);
         }
         [HttpDelete("{Username}"), Authorize]
         public async Task<IActionResult> DeleteUserAsync(string Username)
         {
             var deleted = await _userService.DeleteUserAsync(Username);
-            if(!deleted) return BadRequest("User not found");
+            if(!deleted) return BadRequest("Can't delete user");
             return NoContent();
         }
         

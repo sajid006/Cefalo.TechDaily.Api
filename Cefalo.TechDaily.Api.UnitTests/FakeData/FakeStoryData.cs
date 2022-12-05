@@ -22,16 +22,16 @@ namespace Cefalo.TechDaily.Api.UnitTests.FakeData
             fakeStory.Id = 1;
             fakeStory.Title = "Title";
             fakeStory.AuthorName = "sajid1";
-            fakeStory.UpdatedAt = DateTime.Now;
-            fakeStory.CreatedAt = DateTime.Now;
+            fakeStory.UpdatedAt = DateTime.UtcNow;
+            fakeStory.CreatedAt = DateTime.UtcNow;
             fakeStory.Description = "Description";
 
             fakeStory2 = A.Fake<Story>(x => x.WithArgumentsForConstructor(() => new Story()));
             fakeStory2.Id = 2;
             fakeStory2.Title = "Title";
             fakeStory2.AuthorName = "sajid2";
-            fakeStory2.UpdatedAt = DateTime.Now;
-            fakeStory2.CreatedAt = DateTime.Now;
+            fakeStory2.UpdatedAt = DateTime.UtcNow;
+            fakeStory2.CreatedAt = DateTime.UtcNow;
             fakeStory2.Description = "Description";
 
             fakeStoryList = new List<Story> { fakeStory };

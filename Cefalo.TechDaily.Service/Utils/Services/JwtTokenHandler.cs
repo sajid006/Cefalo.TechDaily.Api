@@ -34,7 +34,7 @@ namespace Cefalo.TechDaily.Service.Utils.Services
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(100),
+                expires: DateTime.UtcNow.AddDays(100),
                 signingCredentials: creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;

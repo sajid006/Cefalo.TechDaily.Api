@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
+namespace Cefalo.TechDaily.Api.UnitTests.FakeData
 {
     public class FakeUserData
     {
@@ -105,3 +105,4 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
         }
     }
 }
+

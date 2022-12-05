@@ -26,6 +26,11 @@ namespace Cefalo.TechDaily.Repository.Repositories
             var userByName =  await _context.Users.FindAsync(Username);
             return userByName;
         }
+        public async Task<int> CountUserByEmailAsync(string Email)
+        {
+            var CountUserByEmail = await _context.Users.Where(u => u.Email == Email).CountAsync();
+            return CountUserByEmail;
+        }
         public async Task<User?> PostUserAsync(User user)
         {
             _context.Users.Add(user);
@@ -55,5 +60,7 @@ namespace Cefalo.TechDaily.Repository.Repositories
             // if (user != null) return false;
             return true;
         }
+
+        
     }
 }

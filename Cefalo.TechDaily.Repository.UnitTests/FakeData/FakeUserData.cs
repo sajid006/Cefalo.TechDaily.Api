@@ -7,12 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
+namespace Cefalo.TechDaily.Repository.UnitTests.FakeData
 {
     public class FakeUserData
     {
-        public User fakeUser;
-        public User fakeUser2;
+        public User fakeUser,fakeUser2,fakeUser3, fakeUser4;
         public UserWithToken fakeUserWithToken;
         public UserDto fakeUserDto;
         public UserDto fakeUserDto2;
@@ -31,9 +30,9 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
             fakeUser.Email = "sajid1@gmail.com";
             fakeUser.PasswordHash = new byte[10];
             fakeUser.PasswordSalt = new byte[5];
-            fakeUser.UpdatedAt = DateTime.UtcNow;
-            fakeUser.CreatedAt = DateTime.UtcNow;
-            fakeUser.PasswordModifiedAt = DateTime.UtcNow;
+            fakeUser.UpdatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser.CreatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser.PasswordModifiedAt = TrimMilliseconds(DateTime.UtcNow);
 
             fakeUser2 = A.Fake<User>(x => x.WithArgumentsForConstructor(() => new User()));
             fakeUser2.Username = "sajid2";
@@ -41,9 +40,29 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
             fakeUser2.Email = "sajid2@gmail.com";
             fakeUser2.PasswordHash = new byte[5];
             fakeUser2.PasswordSalt = new byte[10];
-            fakeUser2.UpdatedAt = DateTime.UtcNow;
-            fakeUser2.CreatedAt = DateTime.UtcNow;
-            fakeUser2.PasswordModifiedAt = DateTime.UtcNow;
+            fakeUser2.UpdatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser2.CreatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser2.PasswordModifiedAt = TrimMilliseconds(DateTime.UtcNow);
+
+            fakeUser3 = A.Fake<User>(x => x.WithArgumentsForConstructor(() => new User()));
+            fakeUser3.Username = "sajid3";
+            fakeUser3.Name = "Sajid Hasan";
+            fakeUser3.Email = "sajid3@gmail.com";
+            fakeUser3.PasswordHash = new byte[5];
+            fakeUser3.PasswordSalt = new byte[10];
+            fakeUser3.UpdatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser3.CreatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser3.PasswordModifiedAt = TrimMilliseconds(DateTime.UtcNow);
+
+            fakeUser4 = A.Fake<User>(x => x.WithArgumentsForConstructor(() => new User()));
+            fakeUser4.Username = "sajid4";
+            fakeUser4.Name = "Sajid Hasan";
+            fakeUser4.Email = "sajid4@gmail.com";
+            fakeUser4.PasswordHash = new byte[5];
+            fakeUser4.PasswordSalt = new byte[10];
+            fakeUser4.UpdatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser4.CreatedAt = TrimMilliseconds(DateTime.UtcNow);
+            fakeUser4.PasswordModifiedAt = TrimMilliseconds(DateTime.UtcNow);
 
             fakeUserList = new List<User>();
             fakeUserList.Add(fakeUser);
@@ -102,6 +121,10 @@ namespace Cefalo.TechDaily.Service.UnitTests.Fixtures
             fakeUpdateUserDto3.Email = "sajid1@gmail.com";
             fakeUpdateUserDto3.Name = "Sajid Hasan";
             fakeUpdateUserDto3.Password = "";
+        }
+        public static DateTime TrimMilliseconds(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, 0, 0, dt.Kind);
         }
     }
 }

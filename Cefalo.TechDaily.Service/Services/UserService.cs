@@ -51,6 +51,10 @@ namespace Cefalo.TechDaily.Service.Services
         public async Task<UserWithToken> PostUserAsync(SignupDto request)
         {
             _signupDtoValidator.ValidateDTO(request);
+            var userByUsername = await _userRepository.GetUserByUsernameAsync(request.Username);
+            if (userByUsername != null) throw new BadRequestException("Username must be unique");
+            var CountUserByEmail = await _userRepository.CountUserByEmailAsync(request.Email);
+            if (CountUserByEmail > 0) throw new BadRequestException("Email must be unique");
             Tuple<byte[], byte[]> passwordObject = _passwordHandler.CreatePasswordHash(request.Password);
             byte[] passwordSalt = passwordObject.Item1;
             byte[] passwordHash = passwordObject.Item2;

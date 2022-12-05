@@ -21,8 +21,7 @@ namespace Cefalo.TechDaily.Repository.Repositories
 
         public async Task<List<Story>> GetStoriesAsync(int pageNumber,int pageSize)
         {
-            //return await _context.Stories.ToListAsync();
-            return await _context.Stories.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return await _context.Stories.OrderByDescending(x => x.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
         public async Task<Story?> GetStoryByIdAsync(int Id)
         {
@@ -55,11 +54,11 @@ namespace Cefalo.TechDaily.Repository.Repositories
         }
         public async Task<List<Story>> GetStoriesOfAUserAsync(int pageNumber, int pageSize, string username)
         {
-            return await _context.Stories.Where(s => s.AuthorName == username).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return await _context.Stories.OrderByDescending(x => x.Id).Where(s => s.AuthorName == username).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
         public async Task<List<Story>> GetSearchedStoriesAsync(int pageNumber, int pageSize, string pattern)
         {
-            return await _context.Stories.Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return await _context.Stories.OrderByDescending(x => x.Id).Where(s => s.AuthorName.Contains(pattern) || s.Title.Contains(pattern)).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
         public async Task<int> CountStoriesAsync()
         {
